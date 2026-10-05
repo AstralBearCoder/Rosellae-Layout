@@ -1,8 +1,10 @@
 # Rosellae
 
-A keyboard layout for the **Piantor BT** (ZMK) and for standard keyboards
-via **Kanata**. [One sentence on the idea: e.g. "Designed for typing in
-English and X, built around home row mods and a small number of layers."]
+Rosellae is a keyboard layout optimised for French, English and Spanish typing.
+
+This repositry contains my personal config files for the Rosellae Layouts for: 
+- **Piantor BT** (ZMK): 42-keys configured with Nickcoutsos's Keymap Editor
+- **Standard Keyboard** (Kanata): 39-keys configured with all layers or just the key layout (No accents)
 
 ![Layout](images/layout.png)
 
