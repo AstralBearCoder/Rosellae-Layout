@@ -1,51 +1,142 @@
-# Rosellae
+# Rosellæ
 
-Rosellae is a keyboard layout optimised for French, English and Spanish typing.
+**An optimized keyboard layout, 50/50 French & English, Spanish compatible.**
 
-This repositry contains my personal config files for the Rosellae Layouts for: 
-- **Piantor BT** (ZMK): 42-keys configured with Nickcoutsos's Keymap Editor
-- **Standard Keyboard** (Kanata): 39-keys configured with all layers or just the key layout (No accents)
+Rosellæ is designed for the **Piantor BT (42 keys, ZMK)** and also exists as a **Classic ISO version (minimum 39 keys, Kanata)** for standard keyboards. Layout by GalileoBlue.
 
-![Layout](images/layout.png)
+👉 **[Open the interactive layout viewer](https://YOUR-USERNAME.github.io/rosellae-keyboard/)** (all layers, both geometries, light/dark theme)
 
-## Overview
+![Rosellæ on the Piantor, with all layers](images/piantor-layout.png)
 
-- **Layers:** [number and names, e.g. Base, Nav, Num, Sym]
-- **Home row mods:** [yes/no, and which]
-- **Languages / special characters:** [if relevant]
+<!-- Add photos of your real keyboard here, for example:
+![Rosellæ on the Piantor BT](images/piantor-photo.jpg)
+-->
 
-## Repository layout
+## Highlights
 
-| Path | What it is |
-|------|------------|
-| `config/` | ZMK config for the Piantor BT (edited with Keymap Editor) |
+- **Three languages:** tuned for French and English, with full Spanish support (`ñ`, `¿?`, `¡!`, accented vowels).
+- **One-shot layers** for accents and symbols, so no chords and no held keys for accented letters.
+- **Home row mods** for Win / Ctrl / Alt on both hands.
+- **Dedicated `QU` key** and `æ` / `œ` for French.
+- **Combos** on the Piantor for shutdown, screenshots and the word "où".
+- **Two geometries**, one layout: Piantor (ZMK) and Classic ISO (Kanata).
+
+## Layout statistics
+
+| Language | Corpus | SBS | SFS |
+|----------|--------|-----|-----|
+| French | `lexique4_5K` | 0.81% | 4.84% |
+| English | `en_5K` list | 1.00% | 5.34% |
+| Spanish | `es_5K` list | 1.03% | 5.80% |
+
+## The base layer
+
+The alpha core, 3 rows of 5 keys per hand. The colors show which finger types each key (red: pinky, orange: ring, green: middle, blue: index).
+
+![Rosellæ alpha core, colored by finger](images/ortho-layout.png)
+
+Shifted punctuation: `'` → `"`, `,` → `?`, `.` → `!`, `:` → `;`.
+
+### Piantor thumb and outer keys
+
+| | Left hand | Right hand |
+|---|---|---|
+| **Outer column** (top to bottom) | Esc, Tab, Win | Backspace, Enter, Ctrl+Shift |
+| **Thumbs** | Shift, ★ Accents, Ctrl | Nav, Space, AltGr |
+
+On each hand, the thumbs are listed from the outside toward the center of the keyboard.
+
+### Home row mods (hold)
+
+| Left hand | R | T | S |
+|---|---|---|---|
+| Hold | Win | Ctrl | Alt |
+
+| Right hand | H | E | I |
+|---|---|---|---|
+| Hold | Alt | Ctrl | Win |
+
+## Layers
+
+The four layers of the Piantor version: Alpha, Accents (★), Symbols (AltGr) and Navigation (Nav).
+
+![The four layers of Rosellæ on the Piantor](images/layers.png)
+
+### 1. Alpha layer
+The base layer shown above.
+
+### 2. Accents layer (★), one-shot
+Tap ★, then the letter. Gives all the French and Spanish accents on the same key as the base letter:
+
+`é è ê ë` · `à â ä` · `ù û ü` · `î ï` · `ô ö` · `œ æ` · `ç` · `ñ` · `á í ó ú`
+
+It also holds the clipboard shortcuts on the left hand: `Ctrl+Z` (undo), `Ctrl+Y` (redo), `Ctrl+X`, `Ctrl+C`, `Ctrl+V`, `Ctrl+A`.
+
+### 3. Symbols layer (AltGr), one-shot
+Tap AltGr, then the symbol. Pairs such as `[]` `()` `{}` close automatically and return the cursor between them. Includes `€ $ ^ * ~ ` + = - _ < > & @ # % | \ /`, `×`, `→`, and the Spanish `¿?` and `¡!`.
+
+### 4. Navigation layer (Nav), momentary
+Hold Nav (hold Space on the ISO version). Gives:
+
+- Arrow keys on the home row (`n ← · r ↓ · t ↑ · s →`)
+- Media controls (previous, play/pause, next)
+- Page up / page down and the two end-of-line / start-of-line keys
+- A number block (`0`–`9`) with `,` `.` `/` `=` `%`
+- Function keys `F2`, `F4`, `F11`
+
+## Combos (Piantor)
+
+Keys pressed at the same time:
+
+![Rosellæ combos: Power, ScreenShot and Où](images/combos.png)
+
+| Combo | Keys pressed together | Result |
+|-------|-----------------------|--------|
+| **Power** | The 3 right thumb keys (Nav + Space + AltGr) | `Alt + F4` (closes the active window or opens shutdown) |
+| **ScreenShot** | Both inner thumbs (Ctrl + Nav) | `Win + Shift + S` (screen snip) |
+| **Où** | `'` + `O` + `U` | Types `où ` followed by a space |
+
+## Classic ISO version (Kanata)
+
+For standard keyboards, the same layout fits in a **minimum of 39 keys**. The keys marked × in the diagram are unused and left untouched.
+
+![Rosellæ on a Classic ISO keyboard](images/iso-layout.png)
+
+Differences from the Piantor:
+
+- There are no dedicated thumb keys, so **Nav is reached by holding Space**.
+- ★ Accents, Shift and AltGr sit on the bottom row.
+- An **On/Off** key in the top-left corner toggles the remapping.
+- Combos are only available on the Piantor.
+
+## Repository contents
+
+| Path | Description |
+|------|-------------|
+| `config/` | ZMK configuration for the Piantor BT (edited with [Keymap Editor](https://nickcoutsos.github.io/keymap-editor/)) |
 | `build.yaml` | ZMK firmware build targets |
-| `kanata/` | Kanata configs for use on a PC |
-| `images/` | Layout diagrams |
+| `kanata/` | Kanata configuration for the Classic ISO version |
+| `docs/` | Interactive layout viewer (`index.html`), published with GitHub Pages |
+| `images/` | Layout diagrams and photos used in this README |
 
-## Piantor BT (ZMK)
+## Installation
 
-1. Open the **Actions** tab and download the latest firmware artifact.
-2. Flash the `.uf2` files to the left and right halves.
-3. To edit the layout, use [Keymap Editor](https://nickcoutsos.github.io/keymap-editor/)
-   and connect it to this repo.
+### Piantor BT (ZMK)
 
-## Kanata
+1. Open the **Actions** tab of this repository and open the latest successful build.
+2. Download the firmware from the **Artifacts** section.
+3. Flash the `.uf2` file to the left half, then the right half.
 
-The Kanata configs mirror the Piantor layout as closely as possible.
-Because a regular keyboard has fewer keys, some things differ:
+To modify the layout, connect Keymap Editor to this repository, make your changes, and commit. GitHub builds the new firmware automatically.
 
-| Piantor feature | Kanata equivalent |
-|-----------------|-------------------|
-| [e.g. thumb keys] | [e.g. mapped to Space/Alt/etc.] |
-| [e.g. dedicated Nav layer key] | [e.g. held CapsLock] |
-| [e.g. key X] | [not available] |
+### Classic ISO (Kanata)
 
-Run it with:
+1. Install [Kanata](https://github.com/jtroo/kanata) for your operating system.
+2. Run it with the config from this repository:
 
-    kanata --cfg kanata/rosellae-laptop.kbd
-
-See [`kanata/README.md`](kanata/README.md) for platform notes.
+```
+kanata --cfg kanata/rosellae.kbd
+```
 
 ## License
 
