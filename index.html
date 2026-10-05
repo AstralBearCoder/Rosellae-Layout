@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosellæ - Piantor | 42-keys & Classic ISO | Min. 39-keys</title>
+    <style>
+        :root {
+            --bg-page: #0a0a0a;
+            --bg-card: #121212;
+            --bg-inset: #1a1a1a;
+            --accent-nav: #e83;
+            --accent-sym: #7d82f7;
+            --accent-acc: #00bb23;
+            --text-main: #eee;
+            --text-muted: #999;
+            --text-dim: #666;
+            --key-fill: #202020;
+            --stroke: #333;
+            --svg-text: #888;
+            --special-key-text: #bbb;
+            --special-bg: #181818;
+            --mod-box-bg: #282828;
+            --mod-box-border: #444;
+            --mod-box-text: #bbb;
+            --unused-fill: #151515;
+            --unused-stroke: #2a2a2a;
+            --unused-cross: #4a4a4a;
+            --mini-key-off: #20262c;
+            --mini-key-on: #26e64c;
+            --f-pinky: rgba(255, 100, 100, 0.12);
+            --f-ring: rgba(255, 200, 100, 0.12);
+            --f-middle: rgba(100, 255, 100, 0.12);
+            --f-index: rgba(100, 150, 255, 0.18);
+        }
+
+        [data-theme="light"] {
+            --bg-page: #d1d1d6;
+            --bg-card: #e5e5ea;
+            --bg-inset: #bcbcc0;
+            --text-main: #1a1a1a;
+            --text-muted: #444;
+            --text-dim: #777;
+            --key-fill: #f4f4f8;
+            --stroke: #a1a1aa;
+            --svg-text: #333;
+            --special-key-text: #111;
+            --special-bg: #dcdce0;
+            --mod-box-bg: #dadade;
+            --mod-box-border: #ababaf;
+            --mod-box-text: #111;
+            --unused-fill: #e8e8ed;
+            --unused-stroke: #c2c2c7;
+            --unused-cross: #999;
+            --accent-sym: #4f53d8;
+            --mini-key-off: #abb1b8;
+            --mini-key-on: #00bb23;
+            --f-pinky: rgba(255, 100, 100, 0.08);
+            --f-ring: rgba(255, 200, 100, 0.08);
+            --f-middle: rgba(100, 255, 100, 0.08);
+            --f-index: rgba(100, 150, 255, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        @media (min-width: 768px) { body { padding: 35px 20px; } }
+
+        .top-bar { width: 100%; max-width: 1200px; display: flex; justify-content: flex-end; margin-bottom: 20px; }
+        .switch-group {
+            background: var(--bg-card);
+            border: 1px solid var(--stroke);
+            padding: 4px;
+            border-radius: 50px;
+            display: inline-flex;
+            gap: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .ctrl-btn {
+            border: none; background: transparent; color: var(--text-muted);
+            padding: 8px 16px; border-radius: 40px; cursor: pointer;
+            font-weight: 700; font-size: 0.75rem; text-transform: uppercase;
+            transition: 0.2s; white-space: nowrap;
+        }
+        .ctrl-btn.active { background: var(--accent-nav); color: #000; }
+
+        .intro-card, .combos-section {
+            background: var(--bg-card); border-radius: 20px; padding: 24px;
+            width: 100%; max-width: 1200px; border: 1px solid var(--stroke);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        .intro-card { margin: 0 auto 30px auto; }
+        .combos-section { margin: 30px auto 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+        .header-top { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        @media (min-width: 768px) { .header-top { flex-direction: row; justify-content: space-between; align-items: flex-start; } }
+        .header-top h1 { margin: 0; font-size: 1.8rem; font-weight: 700; letter-spacing: -1px; }
+        .header-top p { margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.95rem; }
+
+        .badge {
+            background: var(--accent-nav); color: #000; padding: 8px 18px;
+            border-radius: 6px; font-weight: 800; font-size: 0.8rem;
+            text-transform: uppercase; align-self: flex-start;
+        }
+
+        .dashboard-main { display: flex; flex-direction: column; gap: 25px; border-top: 1px solid var(--stroke); padding-top: 25px; }
+        .stats-horizontal { display: flex; justify-content: space-between; gap: 15px; width: 100%; flex-wrap: wrap; }
+        .stat-item {
+            flex: 1; min-width: 240px; background: rgba(128,128,128,0.04);
+            padding: 15px 20px; border-radius: 12px; border: 1px solid var(--stroke);
+            position: relative; overflow: hidden;
+        }
+        .stat-flag {
+            position: absolute; right: 0; top: 0; bottom: 0; width: 120px;
+            background-size: cover; background-position: center; opacity: 0.25;
+            pointer-events: none; -webkit-mask-image: linear-gradient(to left, black 10%, transparent 100%);
+            mask-image: linear-gradient(to left, black 10%, transparent 100%);
+        }
+        .stat-content { position: relative; z-index: 1; }
+        .stat-lang { color: var(--accent-nav); font-weight: 700; font-size: 0.95rem; margin-bottom: 5px; display: block; }
+        .stat-meta { color: var(--text-dim); font-size: 0.75rem; font-family: monospace; display: block; margin-bottom: 8px; }
+        .stat-values { display: flex; gap: 15px; font-size: 0.85rem; }
+        .stat-label { color: var(--text-muted); text-transform: uppercase; font-size: 0.7rem; margin-right: 5px; }
+        .stat-numb { color: var(--text-main); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+
+        .ortho-box { background: var(--bg-inset); padding: 20px; border-radius: 14px; overflow-x: auto; width: 100%; max-width: 720px; margin: 0 auto; }
+        .ortho-title { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; display: block; text-align: center; font-weight: 700; }
+        .ortho-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr) 15px repeat(5, 1fr);
+            gap: 6px; min-width: 320px; max-width: 550px; margin: 0 auto;
+        }
+        .ortho-key {
+            aspect-ratio: 1.15; background: var(--key-fill); border: 1px solid var(--stroke);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.95rem; font-weight: 600; color: var(--text-main); border-radius: 5px; text-transform: uppercase;
+        }
+        .ortho-gap { grid-column: 6; }
+        .f-p { background-color: var(--f-pinky); border-color: rgba(255,100,100,0.3); }
+        .f-r { background-color: var(--f-ring); border-color: rgba(255,200,100,0.3); }
+        .f-m { background-color: var(--f-middle); border-color: rgba(100,255,100,0.3); }
+        .f-i { background-color: var(--f-index); border-color: rgba(100,150,255,0.4); }
+
+        .kb-section {
+            background: var(--bg-card); padding: 20px 15px; border-radius: 18px;
+            border: 1px solid var(--stroke); width: 100%; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+        @media (min-width: 768px) { .kb-section { padding: 25px 20px; } }
+        .kb-section.full { width: 100%; max-width: 1200px; margin-bottom: 30px; }
+
+        .layers-grid { display: grid; grid-template-columns: 1fr; gap: 20px; width: 100%; max-width: 1200px; }
+        @media (min-width: 1100px) { .layers-grid { grid-template-columns: 1fr 1fr; } }
+
+        .layer-header-container {
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            margin-bottom: 15px; width: 100%; border-bottom: 1px solid var(--stroke); padding-bottom: 12px;
+        }
+        .layer-title { font-size: 1rem; color: var(--text-main); text-transform: uppercase; letter-spacing: 1.5px; text-align: center; font-weight: 700; margin: 0; }
+        .layer-subtitle { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: none; letter-spacing: 0; font-weight: 400; }
+
+        .kb-wrapper {
+            width: 100%; max-width: 980px; aspect-ratio: 1080 / 320;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; margin: 0 auto;
+        }
+        svg { width: 100%; height: 100%; display: block; margin: 0 auto; }
+        rect, path { fill: var(--key-fill); stroke: var(--stroke); stroke-width: 0.8px; transition: fill 0.3s, stroke 0.3s; }
+        text { fill: var(--svg-text); font-size: 16px; font-weight: 500; text-anchor: middle; dominant-baseline: middle; user-select: none; }
+
+        .key-unused rect, .key-unused path { fill: var(--unused-fill) !important; stroke: var(--unused-stroke) !important; }
+        .key-unused text { fill: var(--unused-cross) !important; font-size: 13px; font-weight: 300; }
+
+        .hold-box rect { fill: var(--mod-box-bg) !important; stroke: var(--mod-box-border) !important; stroke-width: 0.8px; }
+        .hold-box text { fill: var(--mod-box-text) !important; font-size: 10px !important; font-weight: 700 !important; }
+
+        .hold-pill.nav-pill rect { fill: var(--accent-nav) !important; stroke: none !important; }
+        .hold-pill.nav-pill text { fill: #000 !important; font-weight: 800 !important; font-size: 11px !important; letter-spacing: 1px; }
+
+        .specialKey rect, .specialKey path { fill: var(--special-bg); }
+        .specialKey text { font-size: 13px; fill: var(--special-key-text); font-weight: 600; }
+
+        #nav-key rect, .nav-key rect { fill: var(--accent-nav) !important; stroke: none; }
+        #nav-key text, .nav-key text { fill: #000 !important; font-weight: 700; }
+        #sym-key rect, .sym-key rect { fill: var(--accent-sym) !important; stroke: none; }
+        #sym-key text, .sym-key text { fill: #fff !important; font-weight: 700; }
+        #acc-key rect, .acc-key rect { fill: var(--accent-acc) !important; stroke: none; }
+        #acc-key text, .acc-key text { fill: #fff !important; font-weight: 700; }
+
+        .onoff-key rect { stroke: var(--accent-nav); stroke-dasharray: 3, 3; }
+        .onoff-key text { fill: var(--accent-nav); font-size: 11px; font-weight: 700; }
+
+        #piantor-left  { transform: translate(64px, 7px); }
+        #piantor-right { transform: translate(674px, 7px); }
+        .p-col_0 { transform: translate(0px, 52px); }
+        .p-col_1 { transform: translate(58px, 52px); }
+        .p-col_2 { transform: translate(116px, 20px); }
+        .p-col_3 { transform: translate(174px, 0px); }
+        .p-col_4 { transform: translate(232px, 28px); }
+        .p-col_5 { transform: translate(290px, 40px); }
+        .p-col_6  { transform: translate(0px, 40px); }
+        .p-col_7  { transform: translate(58px, 28px); }
+        .p-col_8  { transform: translate(116px, 0px); }
+        .p-col_9  { transform: translate(174px, 20px); }
+        .p-col_10 { transform: translate(232px, 52px); }
+        .p-col_11 { transform: translate(290px, 52px); }
+
+        .p-thb_1 { transform: translate(250px, 238px) rotate(8deg); }
+        .p-thb_2 { transform: translate(314px, 250px) rotate(18deg); }
+        .p-thb_3 { transform: translate(378px, 272px) rotate(28deg); }
+        .p-thb_4 { transform: translate(-36px, 272px) rotate(-28deg); }
+        .p-thb_5 { transform: translate(28px, 250px) rotate(-18deg); }
+        .p-thb_6 { transform: translate(92px, 238px) rotate(-8deg); }
+
+        #rowstag-wrapper { transform: translate(153px, 27px); }
+        #row_AE { transform: translate(0px, 0px); }
+        #row_AD { transform: translate(0px, 54px); }
+        #row_AC { transform: translate(0px, 108px); }
+        #row_AB { transform: translate(0px, 162px); }
+        #row_AA { transform: translate(0px, 216px); }
+
+        .sym { fill: var(--accent-sym); font-size: 14px; font-weight: 600; }
+        .acc { fill: var(--accent-acc); font-size: 14px; font-weight: 600; }
+        .nav { fill: var(--accent-nav); font-size: 14px; font-weight: 600; }
+        .controls-center { display: flex; justify-content: center; margin-top: 20px; width: 100%; }
+
+        .layer-normal .sym, .layer-normal .acc, .layer-normal .nav { display: none; }
+        .layer-normal .level1 { font-size: 19px; fill: var(--text-main); }
+        .layer-normal .level2 { display: none; }
+        .layer-normal g:has(.level2) .level1 { y: 35px !important; font-size: 16px; }
+        .layer-normal g:has(.level2) .level2 { display: block; font-size: 14px; fill: var(--text-muted); }
+        .layer-normal .corne-key .level1 { x: 26px !important; y: 26px !important; font-size: 22px; }
+        .layer-normal .corne-key:has(.hold-box) .level1 { y: 21px !important; }
+        .layer-normal .corne-key:has(.level2) .level1 { y: 35px !important; font-size: 18px; }
+        .layer-normal .corne-key:has(.level2) .level2 { x: 26px !important; y: 15px !important; font-size: 16px; }
+        .layer-normal .hold-box { display: block; }
+
+        .layer-acc .hold-box, .layer-sym .hold-box, .layer-nav .hold-box { display: none !important; }
+
+        .layer-acc .level1, .layer-acc .level2, .layer-acc .sym, .layer-acc .nav { display: none; }
+        .layer-acc .acc { display: block; font-size: 17px; }
+        .layer-acc .corne-key .acc, .layer-acc .rowstag-key .acc { x: 24px !important; y: 23px !important; font-size: 19px; }
+
+        .layer-sym .level1, .layer-sym .level2, .layer-sym .acc, .layer-sym .nav { display: none; }
+        .layer-sym .sym { display: block; font-size: 17px; }
+        .layer-sym .corne-key .sym, .layer-sym .rowstag-key .sym { x: 24px !important; y: 23px !important; font-size: 19px; }
+
+        .layer-nav .sym, .layer-nav .acc, .layer-nav .level1, .layer-nav .level2 { display: none; }
+        .layer-nav .nav { display: block; font-size: 17px; }
+        .layer-nav .corne-key .nav, .layer-nav .rowstag-key .nav { x: 24px !important; y: 23px !important; font-size: 19px; }
+
+        .layer-all[data-view="sym"] .nav { display: none; }
+        .layer-all[data-view="sym"] .sym { display: block; }
+        .layer-all[data-view="nav"] .sym { display: none; }
+        .layer-all[data-view="nav"] .nav { display: block; }
+
+        .combos-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--stroke); padding-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .combos-header h2 { margin: 0; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .combos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+        .combo-card { background: var(--bg-inset); border: 1px solid var(--stroke); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+        .combo-top { display: flex; justify-content: space-between; align-items: center; }
+        .combo-name { font-size: 1.1rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.5px; margin: 0; }
+        .combo-meta { color: var(--text-dim); font-size: 0.75rem; font-family: monospace; background: rgba(0,0,0,0.25); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--stroke); }
+        .mini-preview-wrap { width: 100%; background: rgba(0,0,0,0.35); border-radius: 8px; border: 1px solid var(--stroke); padding: 8px 10px; display: flex; justify-content: center; align-items: center; }
+        .mini-preview-wrap svg { width: 100%; max-width: 250px; height: auto; aspect-ratio: 240 / 75; }
+        .m-key { fill: var(--mini-key-off); stroke: var(--stroke); stroke-width: 0.6px; }
+        .m-on { fill: var(--mini-key-on) !important; stroke: #26e64c !important; stroke-width: 1px; filter: drop-shadow(0 0 4px rgba(38,230,76,0.6)); }
+
+        .combo-formula { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .combo-key-badge { background: var(--key-fill); border: 1px solid var(--stroke); color: var(--text-main); padding: 5px 11px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .combo-plus { color: var(--text-dim); font-weight: 700; font-size: 0.9rem; }
+        .combo-arrow { color: var(--accent-nav); font-size: 1.15rem; font-weight: bold; }
+        .combo-output { background: rgba(38, 230, 76, 0.12); border: 1px solid rgba(38, 230, 76, 0.45); color: #26e64c; padding: 5px 12px; border-radius: 6px; font-weight: 800; font-size: 0.95rem; letter-spacing: 0.5px; }
+        .combo-desc { color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin: 0; }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="switch-group">
+        <button class="ctrl-btn active" id="btn-dark" onclick="setTheme('dark')">Dark</button>
+        <button class="ctrl-btn" id="btn-light" onclick="setTheme('light')">Light</button>
+    </div>
+</div>
+
+<div class="intro-card">
+    <div class="header-top">
+        <div>
+            <h1>Rosellæ</h1>
+            <p>Optimized layout 50/50 French &amp; English + Spanish compatible</p>
+        </div>
+        <div class="badge" id="layout-badge">Piantor | 42-keys</div>
+    </div>
+    <div class="dashboard-main">
+        <div class="stats-horizontal">
+            <div class="stat-item">
+                <div class="stat-flag" style="background-image: url('https://flagcdn.com/w320/fr.png');"></div>
+                <div class="stat-content">
+                    <span class="stat-lang">French</span>
+                    <span class="stat-meta">lexique4_5K</span>
+                    <div class="stat-values">
+                        <span><span class="stat-label">SBS:</span><span class="stat-numb">0.81%</span></span>
+                        <span><span class="stat-label">SFS:</span><span class="stat-numb">4.84%</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-flag" style="background-image: url('https://flagcdn.com/w320/gb.png');"></div>
+                <div class="stat-content">
+                    <span class="stat-lang">English</span>
+                    <span class="stat-meta">en_5K list</span>
+                    <div class="stat-values">
+                        <span><span class="stat-label">SBS:</span><span class="stat-numb">1.00%</span></span>
+                        <span><span class="stat-label">SFS:</span><span class="stat-numb">5.34%</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-flag" style="background-image: url('https://flagcdn.com/w320/es.png');"></div>
+                <div class="stat-content">
+                    <span class="stat-lang">Spanish</span>
+                    <span class="stat-meta">es_5K list</span>
+                    <div class="stat-values">
+                        <span><span class="stat-label">SBS:</span><span class="stat-numb">1.03%</span></span>
+                        <span><span class="stat-label">SFS:</span><span class="stat-numb">5.80%</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ortho-box">
+            <span class="ortho-title">Rosellæ Layout by GalileoBlue</span>
+            <div class="ortho-grid" id="ortho-grid"></div>
+        </div>
+    </div>
+</div>
+
+<div class="kb-section layer-all full" id="full-section" data-view="sym">
+    <div class="layer-header-container">
+        <div class="layer-title">All Layers (Reference)</div>
+        <div class="switch-group">
+            <button class="ctrl-btn active" id="btn-piantor" onclick="setGeometry('piantor')">Piantor | 42-keys</button>
+            <button class="ctrl-btn" id="btn-rowstag" onclick="setGeometry('rowstag')">Classic ISO | Min. 39-keys</button>
+        </div>
+    </div>
+
+    <div class="kb-wrapper master-container"></div>
+
+    <div class="controls-center">
+        <div class="switch-group">
+            <button class="ctrl-btn active" id="view-sym" onclick="setView('sym')">AltGr (Symbols)</button>
+            <button class="ctrl-btn" id="view-nav" onclick="setView('nav')">Nav (Navigation)</button>
+        </div>
+    </div>
+</div>
+
+<div class="layers-grid">
+    <div class="kb-section layer-normal">
+        <div class="layer-header-container">
+            <div class="layer-title">1. Alpha Layer</div>
+        </div>
+        <div class="kb-wrapper target"></div>
+    </div>
+    <div class="kb-section layer-acc">
+        <div class="layer-header-container">
+            <div class="layer-title">
+                2. Accents Layer (★)
+                <span class="layer-subtitle">One Shot Layer</span>
+            </div>
+        </div>
+        <div class="kb-wrapper target"></div>
+    </div>
+    <div class="kb-section layer-sym">
+        <div class="layer-header-container">
+            <div class="layer-title">
+                3. Symbols Layer (AltGr)
+                <span class="layer-subtitle">One Shot Layer (with auto-closing &amp; return)</span>
+            </div>
+        </div>
+        <div class="kb-wrapper target"></div>
+    </div>
+    <div class="kb-section layer-nav">
+        <div class="layer-header-container">
+            <div class="layer-title">
+                4. Navigation Layer (Nav)
+                <span class="layer-subtitle">Momentary (Hold Space)</span>
+            </div>
+        </div>
+        <div class="kb-wrapper target"></div>
+    </div>
+</div>
+
+<div class="combos-section" id="combos-section">
+    <div class="combos-header">
+        <div>
+            <h2>5. Combos</h2>
+            <span class="layer-subtitle">Keys pressed simultaneously</span>
+        </div>
+    </div>
+
+    <div class="combos-grid">
+        <!-- 1. POWER COMBO -->
+        <div class="combo-card">
+            <div class="combo-top">
+                <span class="combo-name">Power</span>
+                <span class="combo-meta">&amp;Shutdown</span>
+            </div>
+            <div class="mini-preview-wrap">
+                <svg viewBox="0 0 240 75">
+                    <g transform="translate(6, 4)">
+                        <rect class="m-key" x="0" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="0" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="0" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="12" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="24" y="4" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="16" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="28" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="36" y="0" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="12" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="24" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="48" y="6" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="18" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="30" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="60" y="8" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="20" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="32" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="52" y="46" width="10" height="10" rx="2"/><rect class="m-key" x="66" y="49" width="10" height="10" rx="2"/><rect class="m-key" x="80" y="54" width="10" height="10" rx="2"/>
+                    </g>
+                    <g transform="translate(142, 4)">
+                        <rect class="m-key" x="12" y="8" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="20" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="32" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="24" y="6" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="18" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="30" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="36" y="0" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="12" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="24" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="48" y="4" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="16" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="28" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="60" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="72" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="72" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="72" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key m-on" x="-2" y="54" width="10" height="10" rx="2"/>
+                        <rect class="m-key m-on" x="12" y="49" width="10" height="10" rx="2"/>
+                        <rect class="m-key m-on" x="26" y="46" width="10" height="10" rx="2"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="combo-formula">
+                <span class="combo-key-badge">Nav</span>
+                <span class="combo-plus">+</span>
+                <span class="combo-key-badge">⎵ Space</span>
+                <span class="combo-plus">+</span>
+                <span class="combo-key-badge">AltGr</span>
+                <span class="combo-arrow">→</span>
+                <span class="combo-output">Alt + F4</span>
+            </div>
+            <p class="combo-desc">
+                Simultaneous press of the <strong>3 right thumb keys</strong>. Triggers immediate shutdown or closes active window.
+            </p>
+        </div>
+
+        <!-- 2. SCREENSHOT COMBO -->
+        <div class="combo-card">
+            <div class="combo-top">
+                <span class="combo-name">ScreenShot</span>
+                <span class="combo-meta">&amp;ScreenShot</span>
+            </div>
+            <div class="mini-preview-wrap">
+                <svg viewBox="0 0 240 75">
+                    <g transform="translate(6, 4)">
+                        <rect class="m-key" x="0" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="0" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="0" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="12" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="24" y="4" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="16" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="28" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="36" y="0" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="12" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="24" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="48" y="6" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="18" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="30" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="60" y="8" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="20" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="32" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="52" y="46" width="10" height="10" rx="2"/><rect class="m-key" x="66" y="49" width="10" height="10" rx="2"/><rect class="m-key m-on" x="80" y="54" width="10" height="10" rx="2"/>
+                    </g>
+                    <g transform="translate(142, 4)">
+                        <rect class="m-key" x="12" y="8" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="20" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="32" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="24" y="6" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="18" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="30" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="36" y="0" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="12" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="24" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="48" y="4" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="16" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="28" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="60" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="72" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="72" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="72" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key m-on" x="-2" y="54" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="12" y="49" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="26" y="46" width="10" height="10" rx="2"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="combo-formula">
+                <span class="combo-key-badge">Ctrl</span>
+                <span class="combo-plus">+</span>
+                <span class="combo-key-badge">Nav</span>
+                <span class="combo-arrow">→</span>
+                <span class="combo-output">Win + Shift + S</span>
+            </div>
+            <p class="combo-desc">
+                Simultaneous press of <strong>both inner thumbs</strong> facing each other. Instantly triggers the screen snip / screenshot utility.
+            </p>
+        </div>
+
+        <!-- 3. OU GRC COMBO (Now including the key directly to the left: ') -->
+        <div class="combo-card">
+            <div class="combo-top">
+                <span class="combo-name">Où (full word)</span>
+                <span class="combo-meta">ougrc</span>
+            </div>
+            <div class="mini-preview-wrap">
+                <svg viewBox="0 0 240 75">
+                    <g transform="translate(6, 4)">
+                        <rect class="m-key" x="0" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="0" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="0" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="12" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="24" y="4" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="16" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="28" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="36" y="0" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="12" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="24" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="48" y="6" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="18" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="30" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="60" y="8" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="20" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="32" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="52" y="46" width="10" height="10" rx="2"/><rect class="m-key" x="66" y="49" width="10" height="10" rx="2"/><rect class="m-key" x="80" y="54" width="10" height="10" rx="2"/>
+                    </g>
+                    <g transform="translate(142, 4)">
+                        <rect class="m-key" x="12" y="8" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="20" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="32" width="10" height="10" rx="2"/>
+                        <!-- Key directly left of O (Col 7: ') active -->
+                        <rect class="m-key m-on" x="24" y="6" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="18" width="10" height="10" rx="2"/><rect class="m-key" x="24" y="30" width="10" height="10" rx="2"/>
+                        <!-- O active -->
+                        <rect class="m-key m-on" x="36" y="0" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="12" width="10" height="10" rx="2"/><rect class="m-key" x="36" y="24" width="10" height="10" rx="2"/>
+                        <!-- U active -->
+                        <rect class="m-key m-on" x="48" y="4" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="16" width="10" height="10" rx="2"/><rect class="m-key" x="48" y="28" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="60" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="60" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="72" y="11" width="10" height="10" rx="2"/><rect class="m-key" x="72" y="23" width="10" height="10" rx="2"/><rect class="m-key" x="72" y="35" width="10" height="10" rx="2"/>
+                        <rect class="m-key" x="-2" y="54" width="10" height="10" rx="2"/><rect class="m-key" x="12" y="49" width="10" height="10" rx="2"/><rect class="m-key" x="26" y="46" width="10" height="10" rx="2"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="combo-formula">
+                <span class="combo-key-badge">'</span>
+                <span class="combo-plus">+</span>
+                <span class="combo-key-badge">O</span>
+                <span class="combo-plus">+</span>
+                <span class="combo-key-badge">U</span>
+                <span class="combo-arrow">→</span>
+                <span class="combo-output">“où ”</span>
+            </div>
+            <p class="combo-desc">
+                Simultaneous strike of <strong>'</strong> (index), <strong>O</strong> (middle), and <strong>U</strong> (ring) on the upper right row. Directly inserts <strong>“où ”</strong> followed by a space.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div style="display:none;">
+    <!-- 1. PIANTOR TEMPLATE -->
+    <svg id="tpl-piantor" viewBox="0 0 1080 320" xmlns="http://www.w3.org/2000/svg">
+        <g id="piantor-left">
+            <g class="p-col_0 specialKey">
+                <g transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="26" y="26">⎋</text></g>
+                <g transform="translate(0 58)"><rect width="52" height="52" rx="5"/><text x="26" y="26">↹</text></g>
+                <g transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="26" y="26">❖</text></g>
+            </g>
+            <g class="p-col_1">
+                <g class="corne-key" transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">B</text><text x="38" y="38" class="sym">€</text><text x="36" y="16" class="acc">^z</text><text x="38" y="38" class="nav">⏮</text></g>
+                <g class="corne-key" transform="translate(0 58)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">N</text><text x="38" y="38" class="sym">+</text><text x="38" y="16" class="acc">æ</text><text x="38" y="38" class="nav">←</text></g>
+                <g class="corne-key" transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1" style="font-size:14px;">QU</text><text x="38" y="38" class="sym">Qu</text><text x="38" y="16" class="acc">q</text><text x="38" y="38" class="nav">1</text></g>
+            </g>
+            <g class="p-col_2">
+                <g class="corne-key" transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">L</text><text x="38" y="38" class="sym">$</text><text x="36" y="16" class="acc">^y</text><text x="38" y="38" class="nav">⏯</text></g>
+                <g class="corne-key" transform="translate(0 58)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">R</text><text x="38" y="38" class="sym">=</text><text x="38" y="16" class="acc">ñ</text><text x="38" y="38" class="nav">↓</text></g>
+                <g class="corne-key" transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">J</text><text x="38" y="38" class="sym">×</text><text x="36" y="16" class="acc">^x</text><text x="38" y="38" class="nav">2</text></g>
+            </g>
+            <g class="p-col_3">
+                <g class="corne-key" transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">D</text><text x="38" y="38" class="sym">[]</text><text x="38" y="16" class="acc">ö</text><text x="38" y="38" class="nav">⏭</text></g>
+                <g class="corne-key" transform="translate(0 58)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">T</text><text x="38" y="38" class="sym">()</text><text x="38" y="16" class="acc">œ</text><text x="38" y="38" class="nav">↑</text></g>
+                <g class="corne-key" transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">M</text><text x="38" y="38" class="sym">{}</text><text x="36" y="16" class="acc">^c</text><text x="38" y="38" class="nav">3</text></g>
+            </g>
+            <g class="p-col_4">
+                <g class="corne-key" transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">C</text><text x="38" y="38" class="sym">^</text><text x="38" y="16" class="acc">ü</text><text x="38" y="38" class="nav">↘</text></g>
+                <g class="corne-key" transform="translate(0 58)">
+                    <rect width="52" height="52" rx="5"/>
+                    <text x="14" y="16" class="level1">S</text><text x="38" y="38" class="sym">*</text><text x="38" y="16" class="acc">ë</text><text x="38" y="38" class="nav">→</text>
+                </g>
+                <g class="corne-key" transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">G</text><text x="38" y="38" class="sym">`</text><text x="36" y="16" class="acc">^v</text><text x="38" y="38" class="nav">0</text></g>
+            </g>
+            <g class="p-col_5">
+                <g class="corne-key" transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">V</text><text x="38" y="38" class="sym">~</text><text x="38" y="16" class="acc"></text><text x="38" y="38" class="nav">⇟</text></g>
+                <g class="corne-key" transform="translate(0 58)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">F</text><text x="38" y="38" class="sym">→</text><text x="38" y="16" class="acc">ä</text><text x="38" y="38" class="nav"></text></g>
+                <g class="corne-key" transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">W</text><text x="38" y="38" class="sym"></text><text x="36" y="16" class="acc">^a</text><text x="38" y="38" class="nav">%</text></g>
+            </g>
+            <g class="p-thb_1 specialKey"><g transform="translate(-26 -26)"><rect width="52" height="52" rx="5"/><text x="26" y="26">Shift</text></g></g>
+            <g class="p-thb_2 acc-key" id="acc-key"><g transform="translate(-26 -26)"><rect width="52" height="52" rx="5"/><text x="26" y="26" class="acc-star">★</text></g></g>
+            <g class="p-thb_3 specialKey"><g transform="translate(-26 -26)"><rect width="52" height="52" rx="5"/><text x="26" y="26">Ctrl</text></g></g>
+        </g>
+
+        <g id="piantor-right">
+            <g class="p-col_6">
+                <g class="corne-key" transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">Z</text><text x="38" y="38" class="sym"></text><text x="38" y="16" class="acc">ù</text><text x="38" y="38" class="nav">⇞</text></g>
+                <g class="corne-key" transform="translate(0 58)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">Y</text><text x="38" y="38" class="sym">#</text><text x="38" y="16" class="acc">ú</text><text x="38" y="38" class="nav">/</text></g>
+                <g class="corne-key" transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">K</text><text x="38" y="38" class="sym"></text><text x="38" y="16" class="acc">ï</text><text x="38" y="38" class="nav">=</text></g>
+            </g>
+            <g class="p-col_7">
+                <g class="corne-key" transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level2">"</text><text x="14" y="38" class="level1">'</text><text x="38" y="38" class="sym">&lt;</text><text x="38" y="16" class="acc">î</text><text x="38" y="38" class="nav">↙</text></g>
+                <g class="corne-key" transform="translate(0 58)">
+                    <rect width="52" height="52" rx="5"/>
+                    <text x="14" y="16" class="level1">H</text><text x="38" y="38" class="sym">_</text><text x="38" y="16" class="acc">ç</text><text x="38" y="38" class="nav">,</text>
+                </g>
+                <g class="corne-key" transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">P</text><text x="38" y="38" class="sym">%</text><text x="38" y="16" class="acc">â</text><text x="38" y="38" class="nav">7</text></g>
+            </g>
+            <g class="p-col_8">
+                <g class="corne-key" transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">O</text><text x="38" y="38" class="sym">&gt;</text><text x="38" y="16" class="acc">ê</text><text x="38" y="38" class="nav">f2</text></g>
+                <g class="corne-key" transform="translate(0 58)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">E</text><text x="38" y="38" class="sym">-</text><text x="38" y="16" class="acc">à</text><text x="38" y="38" class="nav">4</text></g>
+                <g class="corne-key" transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level2">?</text><text x="14" y="38" class="level1">,</text><text x="38" y="38" class="sym">¿?</text><text x="38" y="16" class="acc">ô</text><text x="38" y="38" class="nav">8</text></g>
+            </g>
+            <g class="p-col_9">
+                <g class="corne-key" transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">U</text><text x="38" y="38" class="sym">&amp;</text><text x="38" y="16" class="acc">û</text><text x="38" y="38" class="nav">f4</text></g>
+                <g class="corne-key" transform="translate(0 58)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">I</text><text x="38" y="38" class="sym">@</text><text x="38" y="16" class="acc">è</text><text x="38" y="38" class="nav">5</text></g>
+                <g class="corne-key" transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level2">!</text><text x="14" y="38" class="level1">.</text><text x="38" y="38" class="sym">¡!</text><text x="38" y="16" class="acc">í</text><text x="38" y="38" class="nav">9</text></g>
+            </g>
+            <g class="p-col_10">
+                <g class="corne-key" transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">X</text><text x="38" y="38" class="sym">\</text><text x="38" y="16" class="acc">ó</text><text x="38" y="38" class="nav">f11</text></g>
+                <g class="corne-key" transform="translate(0 58)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level1">A</text><text x="38" y="38" class="sym">/</text><text x="38" y="16" class="acc">é</text><text x="38" y="38" class="nav">6</text></g>
+                <g class="corne-key" transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="14" y="16" class="level2">;</text><text x="14" y="38" class="level1">:</text><text x="38" y="38" class="sym">|</text><text x="38" y="16" class="acc">á</text><text x="38" y="38" class="nav">.</text></g>
+            </g>
+            <g class="p-col_11 specialKey">
+                <g transform="translate(0 0)"><rect width="52" height="52" rx="5"/><text x="26" y="26">⌫</text></g>
+                <g transform="translate(0 58)"><rect width="52" height="52" rx="5"/><text x="26" y="26">⏎</text></g>
+                <g transform="translate(0 116)"><rect width="52" height="52" rx="5"/><text x="26" y="26">⌃⇧</text></g>
+            </g>
+            <g class="p-thb_4 nav-key" id="nav-key"><g transform="translate(-26 -26)"><rect width="52" height="52" rx="5"/><text x="26" y="26" style="font-size:12px;">Nav</text></g></g>
+            <g class="p-thb_5 specialKey"><g transform="translate(-26 -26)"><rect width="52" height="52" rx="5"/><text x="26" y="26" style="font-size:18px;">⎵</text></g></g>
+            <g class="p-thb_6 sym-key" id="sym-key"><g transform="translate(-26 -26)"><rect width="52" height="52" rx="5"/><text x="26" y="26" style="font-size:13px;">AltGr</text></g></g>
+        </g>
+    </svg>
+
+    <!-- 2. CLASSIC ISO TEMPLATE -->
+    <svg id="tpl-rowstag" viewBox="0 0 1080 320" xmlns="http://www.w3.org/2000/svg">
+        <g id="rowstag-wrapper">
+            <g id="row_AE">
+                <g class="specialKey onoff-key"><rect width="48" height="46" rx="4"/><text x="24" y="23">On/Off</text></g>
+                <g class="key-unused" transform="translate(53)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(106)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(159)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(212)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(265)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(318)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(371)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(424)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(477)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(530)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(583)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(636)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(689)"><rect width="85" height="46" rx="4"/><text x="42" y="23">×</text></g>
+            </g>
+            <g id="row_AD">
+                <g class="specialKey"><rect width="72" height="46" rx="4"/><text x="36" y="23">⎋ Esc</text></g>
+                <g class="rowstag-key" transform="translate(77)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">B</text><text x="35" y="34" class="sym">€</text><text x="33" y="15" class="acc">^z</text><text x="35" y="34" class="nav">⏮</text></g>
+                <g class="rowstag-key" transform="translate(130)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">L</text><text x="35" y="34" class="sym">$</text><text x="33" y="15" class="acc">^y</text><text x="35" y="34" class="nav">⏯</text></g>
+                <g class="rowstag-key" transform="translate(183)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">D</text><text x="35" y="34" class="sym">[]</text><text x="35" y="15" class="acc">ö</text><text x="35" y="34" class="nav">⏭</text></g>
+                <g class="rowstag-key" transform="translate(236)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">C</text><text x="35" y="34" class="sym">^</text><text x="35" y="15" class="acc">ü</text><text x="35" y="34" class="nav">↘</text></g>
+                <g class="rowstag-key" transform="translate(289)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">V</text><text x="35" y="34" class="sym">~</text><text x="35" y="15" class="acc"></text><text x="35" y="34" class="nav">⇟</text></g>
+                <g class="rowstag-key" transform="translate(342)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">Z</text><text x="35" y="34" class="sym"></text><text x="35" y="15" class="acc">ù</text><text x="35" y="34" class="nav">⇞</text></g>
+                <g class="rowstag-key" transform="translate(395)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level2">"</text><text x="14" y="34" class="level1">'</text><text x="35" y="34" class="sym">&lt;</text><text x="35" y="15" class="acc">î</text><text x="35" y="34" class="nav">↙</text></g>
+                <g class="rowstag-key" transform="translate(448)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">O</text><text x="35" y="34" class="sym">&gt;</text><text x="35" y="15" class="acc">ê</text><text x="35" y="34" class="nav">f2</text></g>
+                <g class="rowstag-key" transform="translate(501)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">U</text><text x="35" y="34" class="sym">&amp;</text><text x="35" y="15" class="acc">û</text><text x="35" y="34" class="nav">f4</text></g>
+                <g class="rowstag-key" transform="translate(554)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">X</text><text x="35" y="34" class="sym">\</text><text x="35" y="15" class="acc">ó</text><text x="35" y="34" class="nav">f11</text></g>
+                <g class="specialKey" transform="translate(607)"><rect width="48" height="46" rx="4"/><text x="24" y="23" style="font-size:16px;">⌫</text></g>
+                <g class="key-unused" transform="translate(660)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(713)">
+                    <path d="M0,0 h61 a4,4 0 0,1 4,4 v92 a4,4 0 0,1 -4,4 h-30 a4,4 0 0,1 -4,-4 v-44 a4,4 0 0,0 -4,-4 h-23 a4,4 0 0,1 -4,-4 v-44 a4,4 0 0,1 4,-4 z"/>
+                    <text x="34" y="50">×</text>
+                </g>
+            </g>
+            <g id="row_AC">
+                <g class="specialKey"><rect width="88" height="46" rx="4"/><text x="44" y="23">↹ Tab</text></g>
+                <g class="rowstag-key" transform="translate(93)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">N</text><text x="35" y="34" class="sym">+</text><text x="35" y="15" class="acc">æ</text><text x="35" y="34" class="nav">←</text></g>
+                <g class="rowstag-key" transform="translate(146)">
+                    <rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">R</text><text x="35" y="34" class="sym">=</text><text x="35" y="15" class="acc">ñ</text><text x="35" y="34" class="nav">↓</text>
+                    <g class="hold-box" transform="translate(5, 27)"><rect width="16" height="15" rx="3"/><text x="8" y="7">❖</text></g>
+                </g>
+                <g class="rowstag-key" transform="translate(199)">
+                    <rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">T</text><text x="35" y="34" class="sym">()</text><text x="35" y="15" class="acc">œ</text><text x="35" y="34" class="nav">↑</text>
+                    <g class="hold-box" transform="translate(5, 27)"><rect width="16" height="15" rx="3"/><text x="8" y="9" style="font-size:12px !important;">^</text></g>
+                </g>
+                <g class="rowstag-key" transform="translate(252)">
+                    <rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">S</text><text x="35" y="34" class="sym">*</text><text x="35" y="15" class="acc">ë</text><text x="35" y="34" class="nav">→</text>
+                    <g class="hold-box" transform="translate(5, 27)"><rect width="16" height="15" rx="3"/><text x="8" y="8">⌥</text></g>
+                </g>
+                <g class="rowstag-key" transform="translate(305)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">F</text><text x="35" y="34" class="sym">→</text><text x="35" y="15" class="acc">ä</text><text x="35" y="34" class="nav"></text></g>
+                <g class="rowstag-key" transform="translate(358)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">Y</text><text x="35" y="34" class="sym">#</text><text x="35" y="15" class="acc">ú</text><text x="35" y="34" class="nav">/</text></g>
+                <g class="rowstag-key" transform="translate(411)">
+                    <rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">H</text><text x="35" y="34" class="sym">_</text><text x="35" y="15" class="acc">ç</text><text x="35" y="34" class="nav">,</text>
+                    <g class="hold-box" transform="translate(5, 27)"><rect width="16" height="15" rx="3"/><text x="8" y="8">⌥</text></g>
+                </g>
+                <g class="rowstag-key" transform="translate(464)">
+                    <rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">E</text><text x="35" y="34" class="sym">-</text><text x="35" y="15" class="acc">à</text><text x="35" y="34" class="nav">4</text>
+                    <g class="hold-box" transform="translate(5, 27)"><rect width="16" height="15" rx="3"/><text x="8" y="9" style="font-size:12px !important;">^</text></g>
+                </g>
+                <g class="rowstag-key" transform="translate(517)">
+                    <rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">I</text><text x="35" y="34" class="sym">@</text><text x="35" y="15" class="acc">è</text><text x="35" y="34" class="nav">5</text>
+                    <g class="hold-box" transform="translate(5, 27)"><rect width="16" height="15" rx="3"/><text x="8" y="7">❖</text></g>
+                </g>
+                <g class="rowstag-key" transform="translate(570)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">A</text><text x="35" y="34" class="sym">/</text><text x="35" y="15" class="acc">é</text><text x="35" y="34" class="nav">6</text></g>
+                <g class="specialKey" transform="translate(623)"><rect width="48" height="46" rx="4"/><text x="24" y="23" style="font-size:12px;">⏎ Enter</text></g>
+                <g class="key-unused" transform="translate(676)"><rect width="46" height="46" rx="4"/><text x="23" y="23">×</text></g>
+            </g>
+            <g id="row_AB">
+                <g class="key-unused"><rect width="66" height="46" rx="4"/><text x="33" y="23">×</text></g>
+                <g class="rowstag-key" transform="translate(71)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1" style="font-size:14px;">QU</text><text x="35" y="34" class="sym">Qu</text><text x="35" y="15" class="acc">q</text><text x="35" y="34" class="nav">1</text></g>
+                <g class="rowstag-key" transform="translate(124)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">J</text><text x="35" y="34" class="sym">×</text><text x="33" y="15" class="acc">^x</text><text x="35" y="34" class="nav">2</text></g>
+                <g class="rowstag-key" transform="translate(177)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">M</text><text x="35" y="34" class="sym">{}</text><text x="33" y="15" class="acc">^c</text><text x="35" y="34" class="nav">3</text></g>
+                <g class="rowstag-key" transform="translate(230)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">G</text><text x="35" y="34" class="sym">`</text><text x="33" y="15" class="acc">^v</text><text x="35" y="34" class="nav">0</text></g>
+                <g class="rowstag-key" transform="translate(283)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">W</text><text x="35" y="34" class="sym"></text><text x="33" y="15" class="acc">^a</text><text x="35" y="34" class="nav">%</text></g>
+                <g class="key-unused" transform="translate(336)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="rowstag-key" transform="translate(389)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">K</text><text x="35" y="34" class="sym"></text><text x="35" y="15" class="acc">ï</text><text x="35" y="34" class="nav">=</text></g>
+                <g class="rowstag-key" transform="translate(442)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level1">P</text><text x="35" y="34" class="sym">%</text><text x="35" y="15" class="acc">â</text><text x="35" y="34" class="nav">7</text></g>
+                <g class="rowstag-key" transform="translate(495)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level2">?</text><text x="14" y="34" class="level1">,</text><text x="35" y="34" class="sym">¿?</text><text x="35" y="15" class="acc">ô</text><text x="35" y="34" class="nav">8</text></g>
+                <g class="rowstag-key" transform="translate(548)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level2">!</text><text x="14" y="34" class="level1">.</text><text x="35" y="34" class="sym">¡!</text><text x="35" y="15" class="acc">í</text><text x="35" y="34" class="nav">9</text></g>
+                <g class="rowstag-key" transform="translate(601)"><rect width="48" height="46" rx="4"/><text x="14" y="15" class="level2">;</text><text x="14" y="34" class="level1">:</text><text x="35" y="34" class="sym">|</text><text x="35" y="15" class="acc">á</text><text x="35" y="34" class="nav">.</text></g>
+                <g class="key-unused" transform="translate(654)"><rect width="120" height="46" rx="4"/><text x="60" y="23">⇧</text></g>
+            </g>
+            <g id="row_AA">
+                <g class="key-unused"><rect width="50" height="46" rx="4"/><text x="25" y="23">×</text></g>
+                <g class="key-unused" transform="translate(55)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="rowstag-key acc-key" id="acc-key" transform="translate(108)"><rect width="48" height="46" rx="4"/><text x="24" y="23" class="acc-star">★</text></g>
+                <g class="specialKey" transform="translate(161)"><rect width="48" height="46" rx="4"/><text x="24" y="23">⇧ Shift</text></g>
+                <g class="specialKey" transform="translate(214)">
+                    <rect width="297" height="46" rx="4"/>
+                    <text x="148" y="17" style="font-size:12px; font-weight:700;">Space</text>
+                    <g class="hold-pill nav-pill" transform="translate(113, 26)"><rect width="70" height="16" rx="4"/><text x="35" y="8">NAV</text></g>
+                </g>
+                <g class="specialKey sym-key" id="sym-key" transform="translate(516)"><rect width="48" height="46" rx="4"/><text x="24" y="23">AltGr</text></g>
+                <g class="key-unused" transform="translate(569)"><rect width="48" height="46" rx="4"/><text x="24" y="23">×</text></g>
+                <g class="key-unused" transform="translate(622)"><rect width="47" height="46" rx="4"/><text x="23" y="23">×</text></g>
+                <g class="key-unused" transform="translate(674)"><rect width="48" height="21" rx="4"/><text x="24" y="10">×</text></g>
+                <g class="key-unused" transform="translate(674, 25)"><rect width="48" height="21" rx="4"/><text x="24" y="10">×</text></g>
+                <g class="key-unused" transform="translate(727)"><rect width="47" height="46" rx="4"/><text x="23" y="23">×</text></g>
+            </g>
+        </g>
+    </svg>
+</div>
+
+<script>
+    let currentGeometry = 'piantor';
+
+    function setTheme(theme) {
+        const isLight = theme === 'light';
+        document.body.toggleAttribute('data-theme', isLight);
+        document.getElementById('btn-dark').classList.toggle('active', !isLight);
+        document.getElementById('btn-light').classList.toggle('active', isLight);
+        localStorage.setItem('theme', theme);
+    }
+
+    function setView(view) {
+        document.getElementById('full-section').setAttribute('data-view', view);
+        document.getElementById('view-sym').classList.toggle('active', view === 'sym');
+        document.getElementById('view-nav').classList.toggle('active', view === 'nav');
+    }
+
+    function setGeometry(geom) {
+        currentGeometry = geom;
+        const isPiantor = geom === 'piantor';
+        document.getElementById('btn-piantor').classList.toggle('active', isPiantor);
+        document.getElementById('btn-rowstag').classList.toggle('active', !isPiantor);
+        document.getElementById('layout-badge').innerText = isPiantor ? "Piantor | 42-keys" : "Classic ISO | Min. 39-keys";
+        const comboSec = document.getElementById('combos-section');
+        if (comboSec) comboSec.style.display = isPiantor ? 'flex' : 'none';
+        renderKeyboards();
+    }
+
+    function renderKeyboards() {
+        const svg = document.getElementById(currentGeometry === 'piantor' ? 'tpl-piantor' : 'tpl-rowstag').outerHTML;
+        document.querySelector('.master-container').innerHTML = svg;
+        document.querySelectorAll('.target').forEach(el => el.innerHTML = svg);
+    }
+
+    if (localStorage.getItem('theme') === 'light') setTheme('light');
+
+    const orthoData = [
+        "b","l","d","c","v","gap","z","'","o","u","x",
+        "n","r","t","s","f","gap","y","h","e","i","a",
+        "qu","j","m","g","w","gap","k","p",",",".",":"
+    ];
+    const fingers = ["f-p","f-r","f-m","f-i","f-i","gap","f-i","f-i","f-m","f-r","f-p"];
+
+    function renderOrtho() {
+        const grid = document.getElementById('ortho-grid');
+        grid.innerHTML = '';
+        orthoData.forEach((key, i) => {
+            const div = document.createElement('div');
+            if (key === "gap") {
+                div.className = 'ortho-gap';
+            } else {
+                div.className = `ortho-key ${fingers[i % 11]}`;
+                div.innerText = key;
+            }
+            grid.appendChild(div);
+        });
+    }
+
+    renderOrtho();
+    renderKeyboards();
+</script>
+</body>
+</html>
