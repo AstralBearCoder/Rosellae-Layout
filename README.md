@@ -18,7 +18,9 @@ Rosellae - Version Astral is my personal aplication of the rosellae layout, it i
 
 This is my personal application, your are free to adapt it or create a completely different system to go with the rosellae layout.
 
-👉 **[Interactive layout viewer]([https://astralbearcoder.github.io/Rosellae-Layout/])**
+## 👉 **[Interactive layout viewer](https://astralbearcoder.github.io/Rosellae-Layout/)**
+
+
 
 ![Rosellæ on the Piantor, with all layers](Screen/2)
 ![Rosellæ on ISO Classic, with all layers](Screen/3)
