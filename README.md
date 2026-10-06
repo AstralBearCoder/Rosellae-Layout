@@ -8,7 +8,7 @@ The alpha core, 3 rows of 5 keys per hand (30-keys total)
 The colors show which finger types each key (red: pinky, orange: ring, green: middle, blue: index).
 
 
-![Rosellae, Base 30-key letter layout](images/TheImage)
+![Rosellae, Base 30-key letter layout](main/Screen/1)
 
 ## Rosellae - Version Astral
 
