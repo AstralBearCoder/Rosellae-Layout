@@ -2,17 +2,28 @@
 
 **An optimized keyboard layout, 50/50 French & English, Spanish compatible.**
 
-Rosellæ is designed for the **Piantor BT (42 keys, ZMK)** and also exists as a **Classic ISO version (minimum 39 keys, Kanata)** for standard keyboards. Layout by GalileoBlue.
+## Rosellae, Base layout, layout by GalileoBlue (goat)
 
-👉 **[Open the interactive layout viewer](https://YOUR-USERNAME.github.io/rosellae-keyboard/)** (all layers, both geometries, light/dark theme)
+The alpha core, 3 rows of 5 keys per hand (30-keys total)
+The colors show which finger types each key (red: pinky, orange: ring, green: middle, blue: index).
+
+
+![Rosellae, Base 30-key letter layout](images/TheImage)
+
+## Rosellae - Version Astral
+
+Rosellae - Version Astral is my personal aplication of the rosellae layout, it is designed to work on:
+ - **Piantor BT** (ZMK)
+ - **Any Classic ISO keyboard**.
+
+This is my personal application, your are free to adapt it or create a completely different system to go with the rosellae layout.
+
+👉 **[Interactive layout viewer]([https://astralbearcoder.github.io/Rosellae-Layout/])**
 
 ![Rosellæ on the Piantor, with all layers](images/piantor-layout.png)
 
-<!-- Add photos of your real keyboard here, for example:
-![Rosellæ on the Piantor BT](images/piantor-photo.jpg)
--->
 
-## Highlights
+### Highlights
 
 - **Three languages:** tuned for French and English, with full Spanish support (`ñ`, `¿?`, `¡!`, accented vowels).
 - **One-shot layers** for accents and symbols, so no chords and no held keys for accented letters.
@@ -21,7 +32,7 @@ Rosellæ is designed for the **Piantor BT (42 keys, ZMK)** and also exists as a 
 - **Combos** on the Piantor for shutdown, screenshots and the word "où".
 - **Two geometries**, one layout: Piantor (ZMK) and Classic ISO (Kanata).
 
-## Layout statistics
+### Layout statistics
 
 | Language | Corpus | SBS | SFS |
 |----------|--------|-----|-----|
@@ -29,11 +40,7 @@ Rosellæ is designed for the **Piantor BT (42 keys, ZMK)** and also exists as a 
 | English | `en_5K` list | 1.00% | 5.34% |
 | Spanish | `es_5K` list | 1.03% | 5.80% |
 
-## The base layer
-
-The alpha core, 3 rows of 5 keys per hand. The colors show which finger types each key (red: pinky, orange: ring, green: middle, blue: index).
-
-![Rosellæ alpha core, colored by finger](images/ortho-layout.png)
+### The base layer
 
 Shifted punctuation: `'` → `"`, `,` → `?`, `.` → `!`, `:` → `;`.
 
