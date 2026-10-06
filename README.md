@@ -8,7 +8,7 @@ The alpha core, 3 rows of 5 keys per hand (30-keys total)
 The colors show which finger types each key (red: pinky, orange: ring, green: middle, blue: index).
 
 
-![Rosellae, Base 30-key letter layout](main/Screen/1)
+![Rosellae, Base 30-key letter layout](Screen/1)
 
 ## Rosellae - Version Astral
 
@@ -20,7 +20,9 @@ This is my personal application, your are free to adapt it or create a completel
 
 👉 **[Interactive layout viewer]([https://astralbearcoder.github.io/Rosellae-Layout/])**
 
-![Rosellæ on the Piantor, with all layers](images/piantor-layout.png)
+![Rosellæ on the Piantor, with all layers](Screen/2)
+![Rosellæ on ISO Classic, with all layers](Screen/3)
+
 
 
 ### Highlights
