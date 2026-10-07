@@ -1,29 +1,32 @@
 # Rosellæ
 
-**An optimized keyboard layout, 50/50 French & English, Spanish compatible.**
+**An optimized keyboard layout, optimised for typing in French, English & Spanish.**
 
-## Rosellae, Base layout, layout by GalileoBlue (goat)
-
-The alpha core, 3 rows of 5 keys per hand (30-keys total)
-The colors show which finger types each key (red: pinky, orange: ring, green: middle, blue: index).
+### 👉 **[Interactive layout viewer](https://astralbearcoder.github.io/Rosellae-Layout/)**
 
 
-![Rosellae, Base 30-key letter layout](Screen/1)
+## Alpha Layer 
+_The colors show which finger types each key (red: pinky, orange: ring, green: middle, blue: index)._
+
+![Rosellae, Base 30-key letter layout](Screen/6)
+
 
 ## Rosellae - Version Astral
 
-Rosellae - Version Astral is my personal aplication of the rosellae layout, it is designed to work on:
+**Rosellae** - Version Astral is my personal aplication of the rosellae layout, with an accent, symbol and navigation layer. 
+
+It is designed to work on:
  - **Piantor BT** (ZMK)
- - **Any Classic ISO keyboard**.
+
+ ![Rosellæ on the Piantor, with all layers](Screen/2)
+
+ - **Any Classic ISO keyboard** (Kanata)
+
+![Rosellæ on ISO Classic, with all layers](Screen/3)
+
 
 This is my personal application, your are free to adapt it or create a completely different system to go with the rosellae layout.
 
-## 👉 **[Interactive layout viewer](https://astralbearcoder.github.io/Rosellae-Layout/)**
-
-
-
-![Rosellæ on the Piantor, with all layers](Screen/2)
-![Rosellæ on ISO Classic, with all layers](Screen/3)
 
 
 
