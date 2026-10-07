@@ -13,145 +13,185 @@ _The colors show which finger types each key (red: pinky, orange: ring, green: m
 
 ## Rosellae - Version Astral
 
-**Rosellae** - Version Astral is my personal aplication of the rosellae layout, with an accent, symbol and navigation layer. 
+**Rosellae - Version Astral** is my personal application of the Rosellæ layout, featuring custom accent, symbol, and navigation layers. 
 
 It is designed to work on:
- - **Piantor BT** (ZMK)
+- **Piantor BT** (ZMK firmware)
 
- ![Rosellæ on the Piantor, with all layers](Screen/2)
+![Rosellæ on the Piantor, with all layers](Screen/2)
 
- - **Any Classic ISO keyboard** (Kanata)
+- **Any Classic ISO keyboard** (Kanata software remapper)
 
 ![Rosellæ on ISO Classic, with all layers](Screen/3)
 
+This is my personal application; you are free to adapt it or create a completely different system to go with the Rosellæ layout.
 
-This is my personal application, your are free to adapt it or create a completely different system to go with the rosellae layout.
+---
 
+# 1. Rosellæ on Piantor BT (ZMK) — 42-Key Split (6 Thumb Keys)
 
+This version is designed specifically for a 42-key split layout with a 6-key thumb cluster. The configuration files target the **Piantor BT**. It relies entirely on dedicated physical keys, sticky modifiers, and hardware combos—**no home row mods are used here**.
 
+![Rosellæ on the Piantor, with all layers](Screen/2)
 
-### Highlights
+---
 
-- **Three languages:** tuned for French and English, with full Spanish support (`ñ`, `¿?`, `¡!`, accented vowels).
-- **One-shot layers** for accents and symbols, so no chords and no held keys for accented letters.
-- **Home row mods** for Win / Ctrl / Alt on both hands.
-- **Dedicated `QU` key** and `æ` / `œ` for French.
-- **Combos** on the Piantor for shutdown, screenshots and the word "où".
-- **Two geometries**, one layout: Piantor (ZMK) and Classic ISO (Kanata).
+### 🕹️ Features & Ergonomics
 
-### Layout statistics
+#### 1. The 6-Key Thumb Cluster & Outer Columns
+Every modifier and layer switch has its own dedicated physical key:
 
-| Language | Corpus | SBS | SFS |
-|----------|--------|-----|-----|
-| French | `lexique4_5K` | 0.81% | 4.84% |
-| English | `en_5K` list | 1.00% | 5.34% |
-| Spanish | `es_5K` list | 1.03% | 5.80% |
-
-### The base layer
-
-Shifted punctuation: `'` → `"`, `,` → `?`, `.` → `!`, `:` → `;`.
-
-### Piantor thumb and outer keys
-
-| | Left hand | Right hand |
+| Hand | Outer Column (Top to Bottom) | Thumb Cluster (Outer → Inner) |
 |---|---|---|
-| **Outer column** (top to bottom) | Esc, Tab, Win | Backspace, Enter, Ctrl+Shift |
-| **Thumbs** | Shift, ★ Accents, Ctrl | Nav, Space, AltGr |
+| **Left** | `Esc` · `Tab` · `Win` | `Sticky Shift` · `Sticky ★ Accents` · `Ctrl` |
+| **Right** | `Backspace` · `Enter` · `Ctrl+Shift` | `Sticky Nav` · `Space` · `Sticky Symbols (Tap-Dance)` |
 
-On each hand, the thumbs are listed from the outside toward the center of the keyboard.
+#### 2. Advanced Thumb Behaviors
+- **Sticky Shift & Sticky Accents:** Both operate as one-shot layers. Tapping `Shift` then `★ Accents` allows you to effortlessly produce uppercase accented letters (`É`, `À`, `Ç`, etc.) without holding any key down.
+- **Sticky Symbols + Tap-Dance:**
+  - **Single tap or hold:** One-shot switch to the **Symbols** layer.
+  - **Double tap (fast succession):** Becomes **Left Alt**, giving you instant access to standard Alt shortcuts.
+- **Sticky Navigation:** Tap to enter navigation mode for your next keystroke without locking your thumb down.
 
-### Home row mods (hold)
+#### 3. Mouse-Friendly Left Hand (Accent Layer)
+On the **★ Accents Layer**, the left hand contains essential system shortcuts:
+- `Ctrl+Z` (Undo), `Ctrl+Y` (Redo), `Ctrl+A` (Select All)
+- `Ctrl+X` (Cut), `Ctrl+C` (Copy), `Ctrl+V` (Paste)
 
-| Left hand | R | T | S |
-|---|---|---|---|
-| Hold | Win | Ctrl | Alt |
+> 💡 **Ergonomic Purpose:** You can execute frequent text editing and clipboard operations entirely with your left hand while keeping your **right hand continuously on your mouse**.
 
-| Right hand | H | E | I |
-|---|---|---|---|
-| Hold | Alt | Ctrl | Win |
+#### 4. Smart Typing Features
+- **Auto-Closing Delimiters:** Typing `()`, `[]`, or `{}` outputs the pair and automatically places the cursor in the middle.
+- **Spanish Punctuation:** `¿?` and `¡!` are typed in a single stroke with the cursor placed between them.
+- **Dedicated QU Keys:** Includes automatic macros for `qu`, `Qu`, and `QU`.
 
-## Layers
+#### 5. Hardware Combos
+Actions triggered by pressing multiple keys simultaneously:
 
-The four layers of the Piantor version: Alpha, Accents (★), Symbols (AltGr) and Navigation (Nav).
+| Combo | Keys Pressed Together | Result |
+|---|---|---|
+| **Power / Exit** | All 3 Right Thumb Keys (`Nav` + `Space` + `Symbol`) | `Alt + F4` (Closes window / prompts shutdown) |
+| **Screenshot** | Both Inner Thumbs (`Ctrl` + `Nav`) | `Win + Shift + S` (Snipping tool) |
+| **Word "où"** | `'` + `O` + `U` | Types `où ` with a trailing space |
 
-![The four layers of Rosellæ on the Piantor](images/layers.png)
+---
 
-### 1. Alpha layer
-The base layer shown above.
+### 💾 Installation & Flashing (Piantor BT)
 
-### 2. Accents layer (★), one-shot
-Tap ★, then the letter. Gives all the French and Spanish accents on the same key as the base letter:
+1. **Download the Firmware:**
+   - Go to the **Actions** tab of this repository.
+   - Click the latest workflow run and download the `.zip` archive from the **Artifacts** section.
+2. **Flash Left Half:**
+   - Connect the left half via USB.
+   - Double-tap the reset button on the Nice!Nano controller. A storage drive named `NICENANO` will appear.
+   - Drag and drop `piantor_left.uf2` onto it.
+3. **Flash Right Half:**
+   - Repeat the exact same operation with the right half using `piantor_right.uf2`.
 
-`é è ê ë` · `à â ä` · `ù û ü` · `î ï` · `ô ö` · `œ æ` · `ç` · `ñ` · `á í ó ú`
+### ✏️ Customization
+This configuration is fully compatible with [Keymap Editor](https://nickcoutsos.github.io/keymap-editor/):
+1. Connect Keymap Editor to this GitHub repository.
+2. Edit your keys, sticky layers, or combos visually.
+3. Commit your changes: GitHub Actions will recompile the `.uf2` files automatically.
 
-It also holds the clipboard shortcuts on the left hand: `Ctrl+Z` (undo), `Ctrl+Y` (redo), `Ctrl+X`, `Ctrl+C`, `Ctrl+V`, `Ctrl+A`.
+---
+---
 
-### 3. Symbols layer (AltGr), one-shot
-Tap AltGr, then the symbol. Pairs such as `[]` `()` `{}` close automatically and return the cursor between them. Includes `€ $ ^ * ~ ` + = - _ < > & @ # % | \ /`, `×`, `→`, and the Spanish `¿?` and `¡!`.
+# 2. Rosellæ on Classic ISO Keyboard (Kanata)
 
-### 4. Navigation layer (Nav), momentary
-Hold Nav (hold Space on the ISO version). Gives:
+This version brings the complete Rosellæ experience to **any standard physical ISO keyboard** (laptop or desktop) without custom hardware, using the high-performance remapper [Kanata](https://github.com/jtroo/kanata).
 
-- Arrow keys on the home row (`n ← · r ↓ · t ↑ · s →`)
-- Media controls (previous, play/pause, next)
-- Page up / page down and the two end-of-line / start-of-line keys
-- A number block (`0`–`9`) with `,` `.` `/` `=` `%`
-- Function keys `F2`, `F4`, `F11`
+![Rosellæ on ISO Classic, with all layers](Screen/3)
 
-## Combos (Piantor)
+---
 
-Keys pressed at the same time:
+### 🕹️ Features & Ergonomics
 
-![Rosellæ combos: Power, ScreenShot and Où](images/combos.png)
+#### 1. Angle Mod (Physical Ergonomics)
+On traditional row-staggered keyboards, the bottom-left row forces the left wrist into an uncomfortable inward bend (*ulnar deviation*).  
+Rosellæ implements an **Angle Mod**, which shifts the entire bottom-left row **one key to the left** (using the ISO `<` key next to Shift):
+- Your left hand rests in a natural, straight posture, mirroring the natural column alignment of ergonomic keyboards.
+- The layout isolates a compact **39-key core zone**; all outer keys marked with `×` in diagrams are ignored.
 
-| Combo | Keys pressed together | Result |
-|-------|-----------------------|--------|
-| **Power** | The 3 right thumb keys (Nav + Space + AltGr) | `Alt + F4` (closes the active window or opens shutdown) |
-| **ScreenShot** | Both inner thumbs (Ctrl + Nav) | `Win + Shift + S` (screen snip) |
-| **Où** | `'` + `O` + `U` | Types `où ` followed by a space |
+#### 2. Home Row Mods (HRM)
+Since standard keyboards only have a single physical spacebar and lack split thumb clusters, modifiers are placed directly on the home row letters:
 
-## Classic ISO version (Kanata)
+| Left Hand | R | T | S | | Right Hand | H | E | I |
+|:---|:---:|:---:|:---:|---|:---|:---:|:---:|:---:|
+| **Tap** | `r` | `t` | `s` | | **Tap** | `h` | `e` | `i` |
+| **Hold** | **Win (LMet)** | **Ctrl (LCtl)** | **Alt (LAlt)** | | **Hold** | **Alt (LAlt)** | **Ctrl (RCtl)** | **Win (RMet)** |
 
-For standard keyboards, the same layout fits in a **minimum of 39 keys**. The keys marked × in the diagram are unused and left untouched.
+- **How it works:** Tapping a key normally outputs its letter. Holding it down (configured with a reliable 350ms threshold) turns it into a modifier.
+- **Why it matters:** You can trigger complex shortcuts (e.g., `Ctrl+Alt+...`) directly from your resting position without contorting your fingers to reach the bottom corners of the keyboard.
 
-![Rosellæ on a Classic ISO keyboard](images/iso-layout.png)
+#### 3. Space-Cadet Navigation (`@nav`)
+With only a single physical spacebar available:
+- **Tap Space:** Types a standard space.
+- **Hold Space (175ms):** Momentarily reveals the **Navigation Layer**:
+  - **Left Hand:** Arrow cluster on the home row (`N` ←, `R` ↓, `T` ↑, `S` →), plus `Home`, `End`, `PgUp`, `PgDn`, and media keys (`Prev`, `Play/Pause`, `Next`).
+  - **Right Hand:** Full numpad (`0–9`, `.`, `,`, `/`, `=`, `%`) and function keys (`F2`, `F4`, `F11`).
 
-Differences from the Piantor:
+#### 4. Sticky Layers & Shifted Accents
+- **One-Shot Timers:** `★ Accents`, `Shift`, and `Symbols` are configured as one-shot keys with a 1000ms window—tap them once, and the layer stays primed for your next keypress.
+- **Shift + Accent Chain (`@sft_acc`):** Tapping `Shift` followed by `★ Accents` automatically enters the dedicated **Uppercase Accents Layer** (`É`, `È`, `À`, `Ç`, `Ñ`, `Œ`, `Æ`, etc.), fully injected as 100% native Unicode characters.
+- **Left-Hand Mouse Shortcuts:** Just like the Piantor version, the Accent layer maps `Ctrl+Z`, `Ctrl+Y`, `Ctrl+X`, `Ctrl+C`, `Ctrl+V`, and `Ctrl+A` to the left hand, enabling one-handed edits while using the mouse.
 
-- There are no dedicated thumb keys, so **Nav is reached by holding Space**.
-- ★ Accents, Shift and AltGr sit on the bottom row.
-- An **On/Off** key in the top-left corner toggles the remapping.
-- Combos are only available on the Piantor.
+#### 5. Smart Typing Features
+- **Auto-Closing Delimiters:** Typing `()`, `[]`, or `{}` outputs the pair and automatically places the cursor in the middle (`left` macro).
+- **Spanish Punctuation:** `¿?` and `¡!` are typed in a single stroke with the cursor placed between them.
+- **Dedicated QU Keys:** Includes automatic macros for `qu`, `Qu`, and `QU`.
+- **Windows AltGr Fix:** Kanata automatically cancels synthetic left-control events (`windows-altgr cancel-lctl-press`), avoiding classic Windows AltGr bugs.
 
-## Repository contents
+#### 6. Instant Gaming / Raw Toggle
+The top-left key (typically `²` or `grv`) acts as a master hardware bypass:
+- Press it to switch to the **`off` layer** (standard ISO layout), perfect for gaming or sharing your computer.
+- Press it again (`@tobase`) to reactivate Rosellæ.
 
-| Path | Description |
-|------|-------------|
-| `config/` | ZMK configuration for the Piantor BT (edited with [Keymap Editor](https://nickcoutsos.github.io/keymap-editor/)) |
-| `build.yaml` | ZMK firmware build targets |
-| `kanata/` | Kanata configuration for the Classic ISO version |
-| `docs/` | Interactive layout viewer (`index.html`), published with GitHub Pages |
-| `images/` | Layout diagrams and photos used in this README |
+---
 
-## Installation
+### 💾 Installation & Setup (Kanata)
 
-### Piantor BT (ZMK)
+#### Step 1: Install Kanata
+- **Windows:**
+  Using winget:
+  ```powershell
+  winget install jtroo.kanata
+  ```
+  *(Or download `kanata.exe` directly from the [Kanata Releases page](https://github.com/jtroo/kanata/releases)).*
 
-1. Open the **Actions** tab of this repository and open the latest successful build.
-2. Download the firmware from the **Artifacts** section.
-3. Flash the `.uf2` file to the left half, then the right half.
+- **Linux:**
+  Download the binary, make it executable, and move it to your system PATH:
+  ```bash
+  chmod +x kanata
+  sudo mv kanata /usr/local/bin/
+  ```
 
-To modify the layout, connect Keymap Editor to this repository, make your changes, and commit. GitHub builds the new firmware automatically.
+- **macOS:**
+  Using Homebrew:
+  ```bash
+  brew install kanata
+  ```
 
-### Classic ISO (Kanata)
-
-1. Install [Kanata](https://github.com/jtroo/kanata) for your operating system.
-2. Run it with the config from this repository:
-
-```
+#### Step 2: Run Rosellæ
+Clone or download this repository, open a terminal in the folder, and run:
+```bash
 kanata --cfg kanata/rosellae.kbd
 ```
+> **Note for Linux users:** Kanata requires read/write access to `/dev/uinput`. Run with `sudo` or configure appropriate `udev` rules.
 
-## License
+#### Step 3: Run Automatically on Boot (Optional)
+- **Windows:**
+  1. Create a shortcut to `kanata.exe`.
+  2. Right-click the shortcut → **Properties** → in the **Target** field, add `-c "C:\path\to\kanata\rosellae.kbd"`.
+  3. Press `Win + R`, enter `shell:startup`, and place the shortcut there.
+- **Linux:**
+  Set up a user systemd service to run Kanata silently in the background on login.
 
-MIT
+### ✏️ Customization
+All timings, Unicode mappings, and aliases are defined inside:
+```text
+kanata/rosellae.kbd
+```
+Modify this file with any text editor and restart Kanata to reload your changes.
+
+---
