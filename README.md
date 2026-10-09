@@ -1,9 +1,7 @@
-# Rosellæ
+# Rosellæ - Trilingual layout 
+## Optimized for typing in French, English & Spanish.
 
-**An optimized keyboard layout, optimised for typing in French, English & Spanish.**
-
-### 👉 **[Interactive layout viewer](https://astralbearcoder.github.io/Rosellae-Layout/)**
-
+#### 👉 **[Interactive layout viewer](https://astralbearcoder.github.io/Rosellae-Layout/)**
 
 ## Alpha Layer 
 _The colors show which finger types each key (red: pinky, orange: ring, green: middle, blue: index)._
@@ -11,9 +9,24 @@ _The colors show which finger types each key (red: pinky, orange: ring, green: m
 ![Rosellae, Base 30-key letter layout](Screen/6)
 
 
-## Rosellae - Version Astral
+## A-Rosellae (Astral-Rosellae)
 
-**Rosellae - Version Astral** is my personal application of the Rosellæ layout, featuring custom accent, symbol, and navigation layers. 
+**A-Rosellae** is my personal application of the Rosellæ layout, optimized to work for French, English & Spanish.
+This is my personal application; you are free to adapt it or create a completely different system to go with the Rosellæ layout.
+The A-Rosellae Layout is based on the  `United States International` system layout, as it allows for the most native accents without having to use Unicode.
+
+### For who is this layout ?
+### Lingo
+
+### Particularities of A-Rosellae
+
+**Trilingual Core Connected to a Sticky Accents / Shortcuts Layer:**
+- All language-specific characters (French accents/ligatures `é`, `è`, `à`, `ù`, `ç`, `œ`, `æ`; Spanish `ñ`, `á`, `í`, `ó`, `ú`; and German umlauts `ä`, `ö`, `ü`) are concentrated on a single **Sticky (One-Shot) Layer (`★`)**, keeping the base alpha layer clean and fast across all three languages without breaking typing flow.
+- **Left-Handed Productivity Shortcuts on the Accents Layer:** The left side of the `★` Accents Layer has common shortcuts allowing to use the right hand on the mouse, such as: `^z` (Undo), `^y` (Redo), `^x` (Cut), `^c` (Copy), `^v` (Paste), and `^a` (All)
+- **`QU` Macro on the Base Layer:** as `Q` is followed by `U` the vast majority of the time in French, English, and Spanish. For the rare instances where a solo `q` is required, `q` is accessible on the **Sticky Accent Layer**.
+- **Paired Bracket Column `[ { ( ) } ]`:** Paired brackets, typing automaticly the opening, coupled with the closing bracket and moving the cursor inside (like in lots of IDEs)
+- **Paired Spanish Punctuation (`¿?` and `¡!`):**, matching natural Spanish gramar, typing automaticly the inverted `¿`/`¡`, coupled with `?`/`!` and moving the cursor inside.  
+
 
 It is designed to work on:
 - **Piantor BT** (ZMK firmware)
@@ -24,7 +37,6 @@ It is designed to work on:
 
 ![Rosellæ on ISO Classic, with all layers](Screen/3)
 
-This is my personal application; you are free to adapt it or create a completely different system to go with the Rosellæ layout.
 
 ---
 
@@ -32,47 +44,13 @@ This is my personal application; you are free to adapt it or create a completely
 
 This version is designed specifically for a 42-key split layout with a 6-key thumb cluster. The configuration files target the **Piantor BT**. It relies entirely on dedicated physical keys, sticky modifiers, and hardware combos—**no home row mods are used here**.
 
+### Particularities of A-Rosellae On Piantor - 42-key Split (6 Thumb Keys)
+
+- Combos
+- Tap Dances
+- 
+
 ![Rosellæ on the Piantor, with all layers](Screen/2)
-
----
-
-### 🕹️ Features & Ergonomics
-
-#### 1. The 6-Key Thumb Cluster & Outer Columns
-Every modifier and layer switch has its own dedicated physical key:
-
-| Hand | Outer Column (Top to Bottom) | Thumb Cluster (Outer → Inner) |
-|---|---|---|
-| **Left** | `Esc` · `Tab` · `Win` | `Sticky Shift` · `Sticky ★ Accents` · `Ctrl` |
-| **Right** | `Backspace` · `Enter` · `Ctrl+Shift` | `Sticky Nav` · `Space` · `Sticky Symbols (Tap-Dance)` |
-
-#### 2. Advanced Thumb Behaviors
-- **Sticky Shift & Sticky Accents:** Both operate as one-shot layers. Tapping `Shift` then `★ Accents` allows you to effortlessly produce uppercase accented letters (`É`, `À`, `Ç`, etc.) without holding any key down.
-- **Sticky Symbols + Tap-Dance:**
-  - **Single tap or hold:** One-shot switch to the **Symbols** layer.
-  - **Double tap (fast succession):** Becomes **Left Alt**, giving you instant access to standard Alt shortcuts.
-- **Sticky Navigation:** Tap to enter navigation mode for your next keystroke without locking your thumb down.
-
-#### 3. Mouse-Friendly Left Hand (Accent Layer)
-On the **★ Accents Layer**, the left hand contains essential system shortcuts:
-- `Ctrl+Z` (Undo), `Ctrl+Y` (Redo), `Ctrl+A` (Select All)
-- `Ctrl+X` (Cut), `Ctrl+C` (Copy), `Ctrl+V` (Paste)
-
-> 💡 **Ergonomic Purpose:** You can execute frequent text editing and clipboard operations entirely with your left hand while keeping your **right hand continuously on your mouse**.
-
-#### 4. Smart Typing Features
-- **Auto-Closing Delimiters:** Typing `()`, `[]`, or `{}` outputs the pair and automatically places the cursor in the middle.
-- **Spanish Punctuation:** `¿?` and `¡!` are typed in a single stroke with the cursor placed between them.
-- **Dedicated QU Keys:** Includes automatic macros for `qu`, `Qu`, and `QU`.
-
-#### 5. Hardware Combos
-Actions triggered by pressing multiple keys simultaneously:
-
-| Combo | Keys Pressed Together | Result |
-|---|---|---|
-| **Power / Exit** | All 3 Right Thumb Keys (`Nav` + `Space` + `Symbol`) | `Alt + F4` (Closes window / prompts shutdown) |
-| **Screenshot** | Both Inner Thumbs (`Ctrl` + `Nav`) | `Win + Shift + S` (Snipping tool) |
-| **Word "où"** | `'` + `O` + `U` | Types `où ` with a trailing space |
 
 ---
 
@@ -94,7 +72,6 @@ This configuration is fully compatible with [Keymap Editor](https://nickcoutsos.
 2. Edit your keys, sticky layers, or combos visually.
 3. Commit your changes: GitHub Actions will recompile the `.uf2` files automatically.
 
----
 ---
 
 # 2. Rosellæ on Classic ISO Keyboard (Kanata)
