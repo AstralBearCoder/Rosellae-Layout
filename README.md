@@ -1,10 +1,11 @@
 # Rosellæ - Trilingual layout 
-## Optimized for typing in French, English & Spanish.
 
 #### 👉 **[Interactive layout viewer](https://astralbearcoder.github.io/Rosellae-Layout/)**
 
 ## Alpha Layer 
 _The colors show which finger types each key (red: pinky, orange: ring, green: middle, blue: index)._
+
+### Optimized for typing in French, English & Spanish.
 
 ![Rosellae, Base 30-key letter layout](Screen/6)
 
@@ -14,9 +15,6 @@ _The colors show which finger types each key (red: pinky, orange: ring, green: m
 **A-Rosellae** is my personal application of the Rosellæ layout, optimized to work for French, English & Spanish.
 This is my personal application; you are free to adapt it or create a completely different system to go with the Rosellæ layout.
 The A-Rosellae Layout is based on the  `United States International` system layout, as it allows for the most native accents without having to use Unicode.
-
-### For who is this layout ?
-### Lingo
 
 ### Particularities of A-Rosellae
 
@@ -28,12 +26,14 @@ The A-Rosellae Layout is based on the  `United States International` system layo
 - **Paired Spanish Punctuation (`¿?` and `¡!`):**, matching natural Spanish gramar, typing automaticly the inverted `¿`/`¡`, coupled with `?`/`!` and moving the cursor inside.  
 
 
-It is designed to work on:
-- **Piantor BT** (ZMK firmware)
+### A-Rosellae/Rosellae works for any 30+ key keyboards: 
+
+I PERSONALLY use it on: 
+- **Piantor BT** (ZMK firmware) - 42-keys
 
 ![Rosellæ on the Piantor, with all layers](Screen/2)
 
-- **Any Classic ISO keyboard** (Kanata software remapper)
+- **Any Classic ISO keyboard** (Kanata software remapper) - 39-keys
 
 ![Rosellæ on ISO Classic, with all layers](Screen/3)
 
@@ -65,6 +65,9 @@ This version is designed specifically for a 42-key split layout with a 6-key thu
    - Drag and drop `piantor_left.uf2` onto it.
 3. **Flash Right Half:**
    - Repeat the exact same operation with the right half using `piantor_right.uf2`.
+4. *In case of any issues*: drang and drop the corresponding files:
+   - Left Half: `settings_reset-piantor_pro_bt_left-zmk.uf2`
+   - Right Half: `settings_reset-piantor_pro_bt_right-zmk.uf2`
 
 ### ✏️ Customization
 This configuration is fully compatible with [Keymap Editor](https://nickcoutsos.github.io/keymap-editor/):
@@ -79,50 +82,6 @@ This configuration is fully compatible with [Keymap Editor](https://nickcoutsos.
 This version brings the complete Rosellæ experience to **any standard physical ISO keyboard** (laptop or desktop) without custom hardware, using the high-performance remapper [Kanata](https://github.com/jtroo/kanata).
 
 ![Rosellæ on ISO Classic, with all layers](Screen/3)
-
----
-
-### 🕹️ Features & Ergonomics
-
-#### 1. Angle Mod (Physical Ergonomics)
-On traditional row-staggered keyboards, the bottom-left row forces the left wrist into an uncomfortable inward bend (*ulnar deviation*).  
-Rosellæ implements an **Angle Mod**, which shifts the entire bottom-left row **one key to the left** (using the ISO `<` key next to Shift):
-- Your left hand rests in a natural, straight posture, mirroring the natural column alignment of ergonomic keyboards.
-- The layout isolates a compact **39-key core zone**; all outer keys marked with `×` in diagrams are ignored.
-
-#### 2. Home Row Mods (HRM)
-Since standard keyboards only have a single physical spacebar and lack split thumb clusters, modifiers are placed directly on the home row letters:
-
-| Left Hand | R | T | S | | Right Hand | H | E | I |
-|:---|:---:|:---:|:---:|---|:---|:---:|:---:|:---:|
-| **Tap** | `r` | `t` | `s` | | **Tap** | `h` | `e` | `i` |
-| **Hold** | **Win (LMet)** | **Ctrl (LCtl)** | **Alt (LAlt)** | | **Hold** | **Alt (LAlt)** | **Ctrl (RCtl)** | **Win (RMet)** |
-
-- **How it works:** Tapping a key normally outputs its letter. Holding it down (configured with a reliable 350ms threshold) turns it into a modifier.
-- **Why it matters:** You can trigger complex shortcuts (e.g., `Ctrl+Alt+...`) directly from your resting position without contorting your fingers to reach the bottom corners of the keyboard.
-
-#### 3. Space-Cadet Navigation (`@nav`)
-With only a single physical spacebar available:
-- **Tap Space:** Types a standard space.
-- **Hold Space (175ms):** Momentarily reveals the **Navigation Layer**:
-  - **Left Hand:** Arrow cluster on the home row (`N` ←, `R` ↓, `T` ↑, `S` →), plus `Home`, `End`, `PgUp`, `PgDn`, and media keys (`Prev`, `Play/Pause`, `Next`).
-  - **Right Hand:** Full numpad (`0–9`, `.`, `,`, `/`, `=`, `%`) and function keys (`F2`, `F4`, `F11`).
-
-#### 4. Sticky Layers & Shifted Accents
-- **One-Shot Timers:** `★ Accents`, `Shift`, and `Symbols` are configured as one-shot keys with a 1000ms window—tap them once, and the layer stays primed for your next keypress.
-- **Shift + Accent Chain (`@sft_acc`):** Tapping `Shift` followed by `★ Accents` automatically enters the dedicated **Uppercase Accents Layer** (`É`, `È`, `À`, `Ç`, `Ñ`, `Œ`, `Æ`, etc.), fully injected as 100% native Unicode characters.
-- **Left-Hand Mouse Shortcuts:** Just like the Piantor version, the Accent layer maps `Ctrl+Z`, `Ctrl+Y`, `Ctrl+X`, `Ctrl+C`, `Ctrl+V`, and `Ctrl+A` to the left hand, enabling one-handed edits while using the mouse.
-
-#### 5. Smart Typing Features
-- **Auto-Closing Delimiters:** Typing `()`, `[]`, or `{}` outputs the pair and automatically places the cursor in the middle (`left` macro).
-- **Spanish Punctuation:** `¿?` and `¡!` are typed in a single stroke with the cursor placed between them.
-- **Dedicated QU Keys:** Includes automatic macros for `qu`, `Qu`, and `QU`.
-- **Windows AltGr Fix:** Kanata automatically cancels synthetic left-control events (`windows-altgr cancel-lctl-press`), avoiding classic Windows AltGr bugs.
-
-#### 6. Instant Gaming / Raw Toggle
-The top-left key (typically `²` or `grv`) acts as a master hardware bypass:
-- Press it to switch to the **`off` layer** (standard ISO layout), perfect for gaming or sharing your computer.
-- Press it again (`@tobase`) to reactivate Rosellæ.
 
 ---
 
