@@ -1,0 +1,1 @@
+start "" "%~dp0kanata_windows_gui_winIOv2_x64.exe" --cfg "%~dp0Master.kbd"

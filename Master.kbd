@@ -1,0 +1,259 @@
+;; ==========================================================================================
+;;  KANATA CONFIG - "Rosellae" layout
+;; ==========================================================================================
+;;  File structure:
+;;    1. defcfg       Global settings
+;;    2. defsrc       Physical keys (QWERTY names, the layout of the real keyboard)
+;;    3. defchordsv2  Combos (chords)
+;;    4. Layers       Each layer is preceded by the defalias block it needs
+;;                    (base, accent, accent_shift, shift_layer, symbols, navigation, off)
+;;
+;;  Notes:
+;;    - Aliases are global in Kanata. Placing them next to their layer is only for readability.
+;;    - Symbols/navigation layers mirror the Piantor (ZMK) layers key for key.
+;;    - Row 4 of the layers is shifted by one column on the right half (a gap on `b`), so that
+;;      every key stays under the same base-layer letter as on the Piantor.
+;; ==========================================================================================
+
+
+;; ==========================================================================================
+;;  1. GLOBAL CONFIGURATION
+;; ==========================================================================================
+(defcfg
+  process-unmapped-keys yes
+  concurrent-tap-hold yes
+  override-release-on-activation yes
+
+  ;; Kill the fake LCtrl that Windows sends when AltGr (@sym) is pressed
+  windows-altgr cancel-lctl-press
+)
+
+
+;; ==========================================================================================
+;;  2. PHYSICAL KEYS (source layout)
+;; ==========================================================================================
+(defsrc
+  grv  1    2    3    4    5    6    7    8    9    0    -
+  tab  q    w    e    r    t    y    u    i    o    p    [
+  caps a    s    d    f    g    h    j    k    l    ;    '
+  lsft <    z    x    c    v    b    n    m    ,    .    /
+            lmet lalt spc                 ralt
+)
+
+
+;; ==========================================================================================
+;;  3. COMBOS (CHORDS)
+;; ==========================================================================================
+;;  Syntax: (physical keys) output timeout release-behavior (layers where the chord is disabled)
+;;  Chord keys are PHYSICAL keys (defsrc names), not the names used in the layers.
+;;  If your Kanata version rejects `defchordsv2`, rename it `defchordsv2-experimental`.
+;; ------------------------------------------------------------------------------------------
+(defchordsv2
+  ;; "'" + o + u  ->  "où "
+  ;; Physical keys: u = "'" (@aspc), i = o, o = u
+  (u i o) (macro o (unicode ù) spc) 50 first-release
+  (accent accent_shift shift_layer symbols navigation off)
+)
+
+
+;; ==========================================================================================
+;;  4. LAYERS
+;; ==========================================================================================
+
+;; ------------------------------------------------------------------------------------------
+;;  LAYER 1 - BASE
+;; ------------------------------------------------------------------------------------------
+(defalias
+  ;; Layer switching
+  toff    (layer-switch off)                                  ;; Go to the raw keyboard layer
+
+  ;; Thumb keys
+  win     (one-shot 1000 (layer-while-held accent))           ;; Lowercase accents (one-shot)
+  sft     (one-shot 1000 (layer-while-held shift_layer))      ;; Capital letters (one-shot)
+  nav     (tap-hold-release 175 175 spc (layer-while-held navigation)) ;; Tap: space / Hold: navigation
+  sym     (one-shot 1000 (layer-while-held symbols))         ;; Symbols (one-shot, AltGr key)
+
+  ;; Special keys
+  aspc    (macro ' spc)                                       ;; Apostrophe + space
+  qu      (macro q u)                                         ;; "qu" on a single key
+
+  ;; Home row mods (tap: letter / hold: modifier)
+  rr      (tap-hold 350 350 r lmet)
+  tt      (tap-hold 350 350 t lctl)
+  ss      (tap-hold 350 350 s lalt)
+  hh      (tap-hold 350 350 h lalt)
+  ee      (tap-hold 350 350 e rctl)
+  ii      (tap-hold 350 350 i rmet)
+)
+
+(deflayer base
+  @toff  1      2     3     4     5     6     7     8     9     0     -
+  esc    b      l     d     c     v     z     @aspc o     u     x     bspc
+  tab    n      @rr   @tt   @ss   f     y     @hh   @ee   @ii   a     ret
+  XX     @qu    j     m     g     w     XX    k     p     ,     .     S-;
+                @win  @sft  @nav              @sym
+)
+
+
+;; ------------------------------------------------------------------------------------------
+;;  LAYER 2 - LOWERCASE ACCENTS
+;; ------------------------------------------------------------------------------------------
+(defalias
+  ;; Switch to uppercase accents while staying in the accent layer
+  sft_acc (one-shot 1000 (layer-while-held accent_shift))
+
+  ;; Lowercase accented letters (Unicode)
+  ea      (unicode é)
+  eg      (unicode è)
+  ag      (unicode à)
+  ug      (unicode ù)
+  cc      (unicode ç)
+  ec      (unicode ê)
+  ac      (unicode â)
+  ic      (unicode î)
+  oc      (unicode ô)
+  uc      (unicode û)
+  et      (unicode ë)
+  it      (unicode ï)
+  at      (unicode ä)
+  ot      (unicode ö)
+  ut      (unicode ü)
+  aa      (unicode á)
+  ia      (unicode í)
+  oa      (unicode ó)
+  ua      (unicode ú)
+  nt      (unicode ñ)
+  oe      (unicode œ)
+  ae      (unicode æ)
+)
+
+(deflayer accent
+  _      _      _      _      _      _      _      _     _      _      _      _
+  _      C-z    C-y    @ot    @ut    _      @ug    @ic   @ec    @uc    @oa    _
+  _      @ae    @nt    @oe    @et    @at    @ua    @cc   @ag    @eg    @ea    _
+  _      q      C-x    C-c    C-v    C-a    _      @it    @ac   @ia    @oc    @aa
+                _      @sft_acc _                  _
+)
+
+
+;; ------------------------------------------------------------------------------------------
+;;  LAYER 3 - UPPERCASE ACCENTS
+;; ------------------------------------------------------------------------------------------
+(defalias
+  Ea      (unicode É)
+  Eg      (unicode È)
+  Ag      (unicode À)
+  Ug      (unicode Ù)
+  Cc      (unicode Ç)
+  Ec      (unicode Ê)
+  Ac      (unicode Â)
+  Ic      (unicode Î)
+  Oc      (unicode Ô)
+  Uc      (unicode Û)
+  Et      (unicode Ë)
+  It      (unicode Ï)
+  At      (unicode Ä)
+  Ot      (unicode Ö)
+  Ut      (unicode Ü)
+  Aa      (unicode Á)
+  Ia      (unicode Í)
+  Oa      (unicode Ó)
+  Ua      (unicode Ú)
+  Nt      (unicode Ñ)
+  Oe      (unicode Œ)
+  Ae      (unicode Æ)
+)
+
+(deflayer accent_shift
+  _      _      _      _      _      _      _      _     _      _      _      _
+  _      _      _      @Ot    @Ut    _      @Ug    @Ic   @Ec    @Uc    @Oa    _
+  _      @Ae    @Nt    @Oe    @Et    @At    @Ua    @Cc   @Ag    @Eg    @Ea    _
+  _      _      _      _      _      _      _      @It   @Ac    @Ia    @Oc    @Aa
+                _      _      _                    _
+)
+
+
+;; ------------------------------------------------------------------------------------------
+;;  LAYER 4 - SHIFT (general capital letters)
+;; ------------------------------------------------------------------------------------------
+(defalias
+  sc      (unmod ;)                                           ;; Plain ";" (the base key gives ":")
+  gspc    (macro S-' spc)                                     ;; Double quote + space
+  q3      (macro S-q S-u)                                     ;; "QU"
+)
+
+(deflayer shift_layer
+  _      _      _      _      _      _      _      _     _      _      _      _
+  _      S-b    S-l    S-d    S-c    S-v    S-z    @gspc S-o    S-u    S-x    _
+  _      S-n    S-r    S-t    S-s    S-f    S-y    S-h   S-e    S-i    S-a    _
+  _      @q3    S-j    S-m    S-g    S-w    _      S-k   S-p    S-/    S-1    @sc
+                _      _      _                    _
+)
+
+
+;; ------------------------------------------------------------------------------------------
+;;  LAYER 5 - SYMBOLS (identical to the Piantor "Layer2_Symbol")
+;; ------------------------------------------------------------------------------------------
+(defalias
+  ;; Special characters
+  eur     (unicode €)
+  arrow   (unicode →)
+  times   (unicode ×)
+
+  ;; Macros that type a pair and put the cursor between the two characters
+  pmk     (macro S-9 S-0 left)                                ;; ()
+  cmk     (macro [ ] left)                                    ;; []
+  amk     (macro S-[ S-] left)                                ;; {}
+  ;; The numbers are delays in ms: Unicode output and normal key presses take different
+  ;; paths and can arrive out of order without them (this caused "?¿" instead of "¿?").
+  qmk     (macro (unicode ¿) 20 S-/ 20 left)                  ;; ¿?
+  emk     (macro (unicode ¡) 20 S-1 20 left)                  ;; ¡!
+
+  ;; Capital "Qu"
+  Q2      (macro S-q u)
+)
+
+(deflayer symbols
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
+  _      @eur   S-4    @cmk   S-6    S-grv  XX     S-,    S-.    S-7    \      del
+  _      S-=    =      @pmk   S-8    @arrow S-3    S--    -      S-2    /      _
+  _      @Q2    @times @amk   grv    XX     XX     XX     S-5    @qmk   @emk   S-\
+                _      _      _                    _
+)
+;;  Reading guide (characters produced, row by row):
+;;    row 2:  [ ]  €  $  []  ^  ~  -  <  >  &  \  Del
+;;    row 3:  [ ]  +  =  ()  *  →  #  _  -  @  /  [ ]
+;;    row 4:  [ ]  Qu  ×  {}  `  -  -  -  %  ¿?  ¡!  |
+
+
+;; ------------------------------------------------------------------------------------------
+;;  LAYER 6 - NAVIGATION & FUNCTION KEYS (identical to the Piantor "Layer3_Nav")
+;;  No alias needed: every key is a native Kanata key.
+;; ------------------------------------------------------------------------------------------
+(deflayer navigation
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
+  _      prev   pp     next   end    pgdn   pgup   home   f2     f4     f11    _
+  _      lft    down   up     rght   -      /      ,      4      5      6      _
+  _      1      2      3      0      S-=    XX     =      7      8      9      .
+                _      _      _                    _
+)
+;;  Reading guide:
+;;    row 2:  media prev / play-pause / next, End, PgDn, PgUp, Home, F2, F4, F11
+;;    row 3:  arrows (left, down, up, right), - / ,  and numpad-style 4 5 6
+;;    row 4:  1 2 3 0 + = 7 8 9 .
+
+
+;; ------------------------------------------------------------------------------------------
+;;  LAYER 7 - RAW KEYBOARD (Kanata disabled)
+;; ------------------------------------------------------------------------------------------
+(defalias
+  tobase  (layer-switch base)                                 ;; Go back to the base layer
+)
+
+(deflayer off
+  @tobase 1     2      3      4      5      6      7     8      9      0      -
+  tab     q     w      e      r      t      y      u     i      o      p      [
+  caps    a     s      d      f      g      h      j     k      l      ;      '
+  lsft    <     z      x      c      v      b      n     m      ,      .      /
+                lmet   lalt   spc                  ralt
+)
