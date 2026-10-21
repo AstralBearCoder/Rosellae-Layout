@@ -44,12 +44,6 @@ I PERSONALLY use it on:
 
 This version is designed specifically for a 42-key split layout with a 6-key thumb cluster. The configuration files target the **Piantor BT**. It relies entirely on dedicated physical keys, sticky modifiers, and hardware combos—**no home row mods are used here**.
 
-### Particularities of A-Rosellae On Piantor - 42-key Split (6 Thumb Keys)
-
-- Combos
-- Tap Dances
-- 
-
 ![Rosellæ on the Piantor, with all layers](Screen/2)
 
 ---
