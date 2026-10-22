@@ -1,6 +1,6 @@
 # Rosellæ - Trilingual layout 
 
-#### 👉 **[Interactive layout viewer](https://astralbearcoder.github.io/Rosellae-Layout/)**
+## 👉 **[Interactive layout viewer](https://astralbearcoder.github.io/Rosellae-Layout/)**
 
 ## Alpha Layer 
 _The colors show which finger types each key (red: pinky, orange: ring, green: middle, blue: index)._
