@@ -2,6 +2,7 @@
 <h1>Rosellæ</h1>
  
 <h3>A trilingual keyboard layout for French · English · Spanish</h3>
+<h4>Runs on `United States International` system layout</h4>
  
 <h2>
   👉 <a href="https://astralbearcoder.github.io/Rosellae-Layout/">OPEN THE INTERACTIVE LAYOUT VIEWER</a> 👈
