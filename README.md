@@ -1,5 +1,6 @@
 <div align="center">
-<h1>Rosellæ</h1>
+<h1>Rosellae</h1>
+<p>Created by <a href="https://github.com/GalileoBlues">GalileoBlues</a></p>
  
 <h3>A trilingual keyboard layout for French · English · Spanish</h3>
 
