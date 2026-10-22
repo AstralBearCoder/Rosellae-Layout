@@ -8,7 +8,6 @@
 </h2>
 <p><em>See every layer, every key and every finger color live, no install needed.</em></p>
 <img src="Screen/7" alt="Rosellae, Base 30-key letter layout" width="100%">
-<p><em>Colors show which finger types each key: 🟥 pinky · 🟧 ring · 🟩 middle · 🟦 index</em></p>
 </div>
 ---
  
