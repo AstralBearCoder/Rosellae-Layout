@@ -12,7 +12,6 @@
 </h2>
 <img src="Screen/7" alt="Rosellae, Base 30-key letter layout" width="100%">
 </div>
----
  
 ## ⚡ Quick start
  
