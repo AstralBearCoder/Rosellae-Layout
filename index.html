@@ -13,28 +13,28 @@
    is defined below as --fl-* (left) and --fr-* (right). */
 :root {
   --bg-page: #0a0a0a;  --bg-card: #121212;  --bg-inset: #1a1a1a;
-  --accent-nav: #e83;  --accent-sym: #7d82f7;  --accent-acc: #00bb23;
+  --accent-nav: #F07000;  --accent-sym: #93B0FF;  --accent-acc: #30D090;   /* orange / periwinkle / green of the colour map */
   /* Accents as text colours (tuned for contrast on each theme) */
-  --t-nav: #e83;  --t-sym: #7d82f7;  --t-acc: #00bb23;
+  --t-nav: #F07000;  --t-sym: #93B0FF;  --t-acc: #30D090;
   --text-main: #eee;   --text-muted: #aaa;   --text-dim: #8c8c8c;
   --key-fill: #202020; --stroke: #3a3a3a;    --svg-text: #999;
   --special-key-text: #bbb; --special-bg: #181818;
   --mod-box-bg: #282828; --mod-box-border: #444; --mod-box-text: #bbb;
   --unused-fill: #151515; --unused-stroke: #2a2a2a; --unused-cross: #6a6a6a;
-  --mini-key-off: #20262c; --mini-key-on: #26e64c;
+  --mini-key-off: #20262c; --mini-key-on: #30D090;
   /* Finger colour map */
   --fl-pinky: #FFDD6B; --fl-ring: #FFB000; --fl-middle: #F07000; --fl-index: #B94410; --fl-thumb: #612E00;
   --fr-index: #0032A0; --fr-middle: #5340CB; --fr-ring: #93B0FF; --fr-pinky: #A0DEFF; --fr-thumb: #30D090;
 }
 :root[data-theme="light"] {
   --bg-page: #d1d1d6;  --bg-card: #e5e5ea;  --bg-inset: #bcbcc0;
-  --t-nav: #9a5200;  --t-sym: #4f53d8;  --t-acc: #007a1c;
+  --t-nav: #B94410;  --t-sym: #5340CB;  --t-acc: #087048;
   --text-main: #1a1a1a; --text-muted: #3d3d3d; --text-dim: #595959;
   --key-fill: #f4f4f8; --stroke: #85858e;    --svg-text: #333;
   --special-key-text: #111; --special-bg: #dcdce0;
   --mod-box-bg: #dadade; --mod-box-border: #ababaf; --mod-box-text: #111;
   --unused-fill: #e8e8ed; --unused-stroke: #c2c2c7; --unused-cross: #777;
-  --mini-key-off: #abb1b8; --mini-key-on: #00bb23;
+  --mini-key-off: #4a5159; --mini-key-on: #30D090;
 }
 
 /* ==========================================================================
@@ -111,7 +111,7 @@ body {
 .stat-item:hover { border-color: var(--text-dim); }
 .stat-item:active { transform: scale(.98); }
 .stat-item:focus-visible { outline: 2px solid var(--accent-nav); outline-offset: 2px; }
-.stat-item.on { border-color: var(--accent-nav); background: rgba(238,136,51,.09); }
+.stat-item.on { border-color: var(--accent-nav); background: rgba(240,112,0,.1); }
 .stat-flag {
   position: absolute; top: 0; right: 0; bottom: 0; width: 90px; opacity: .22; pointer-events: none;
   background-size: cover; background-position: center;
@@ -240,7 +240,7 @@ body {
 .c-lp, .c-lr, .c-lm, .c-li, .c-ri, .c-rm, .c-rr, .c-rp { border-color: rgba(0,0,0,.35); }
 .c-lp { background: var(--fl-pinky);  color: #000; }  /* left pinky  */
 .c-lr { background: var(--fl-ring);   color: #000; }  /* left ring   */
-.c-lm { background: var(--fl-middle); color: #fff; }  /* left middle */
+.c-lm { background: var(--fl-middle); color: #fff; }  /* left middle (D T M) */
 .c-li { background: var(--fl-index);  color: #fff; }  /* left index (2 columns) */
 .c-ri { background: var(--fr-index);  color: #fff; }  /* right index (2 columns) */
 .c-rm { background: var(--fr-middle); color: #fff; }  /* right middle */
@@ -299,13 +299,13 @@ text { fill: var(--svg-text); font-size: 16px; font-weight: 500; text-anchor: mi
 .mini-preview-wrap { display: flex; justify-content: center; width: 100%; padding: 8px 10px; background: rgba(0,0,0,.35); border: 1px solid var(--stroke); border-radius: 8px; }
 .mini-preview-wrap svg { width: 100%; max-width: 250px; height: auto; aspect-ratio: 240 / 75; }
 .m-key { fill: var(--mini-key-off); stroke: var(--stroke); stroke-width: .6px; }
-.m-on  { fill: var(--mini-key-on) !important; stroke: #26e64c !important; stroke-width: 1px; filter: drop-shadow(0 0 4px rgba(38,230,76,.6)); }
+.m-on  { fill: var(--mini-key-on) !important; stroke: var(--mini-key-on) !important; stroke-width: 1px; filter: drop-shadow(0 0 4px rgba(48,208,144,.6)); }
 .combo-formula { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .combo-key-badge { padding: 5px 11px; font-size: .85rem; font-weight: 700; background: var(--key-fill); border: 1px solid var(--stroke); border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
 .combo-plus  { font-weight: 700; color: var(--text-dim); }
 .combo-arrow { font-size: 1.15rem; font-weight: 700; color: var(--t-nav); }
-.combo-output { padding: 5px 12px; font-size: .95rem; font-weight: 800; color: #26e64c; background: rgba(38,230,76,.12); border: 1px solid rgba(38,230,76,.45); border-radius: 6px; }
-:root[data-theme="light"] .combo-output { color: #087a20; }
+.combo-output { padding: 5px 12px; font-size: .95rem; font-weight: 800; color: #30D090; background: rgba(48,208,144,.12); border: 1px solid rgba(48,208,144,.45); border-radius: 6px; }
+:root[data-theme="light"] .combo-output { color: #065f3f; background: rgba(6,95,63,.1); border-color: rgba(6,95,63,.5); }
 .td-n { min-width: 62px; font-size: .85rem; font-weight: 700; }
 .td-n i { margin-right: 6px; font-style: normal; letter-spacing: 2px; color: var(--t-nav); }
 .combo-desc { margin: 0; font-size: .85rem; line-height: 1.4; color: var(--text-muted); }
