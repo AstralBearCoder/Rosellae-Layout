@@ -9,30 +9,32 @@
    1. THEME TOKENS
    Dark is the default; the light theme overrides the same variables.
    ========================================================================== */
+/* The finger colour map (warm = left hand, cool = right hand, lighter towards the pinky)
+   is defined below as --fl-* (left) and --fr-* (right). */
 :root {
   --bg-page: #0a0a0a;  --bg-card: #121212;  --bg-inset: #1a1a1a;
   --accent-nav: #e83;  --accent-sym: #7d82f7;  --accent-acc: #00bb23;
-  --text-main: #eee;   --text-muted: #999;   --text-dim: #666;
-  --key-fill: #202020; --stroke: #333;       --svg-text: #888;
+  /* Accents as text colours (tuned for contrast on each theme) */
+  --t-nav: #e83;  --t-sym: #7d82f7;  --t-acc: #00bb23;
+  --text-main: #eee;   --text-muted: #aaa;   --text-dim: #8c8c8c;
+  --key-fill: #202020; --stroke: #3a3a3a;    --svg-text: #999;
   --special-key-text: #bbb; --special-bg: #181818;
   --mod-box-bg: #282828; --mod-box-border: #444; --mod-box-text: #bbb;
-  --unused-fill: #151515; --unused-stroke: #2a2a2a; --unused-cross: #4a4a4a;
+  --unused-fill: #151515; --unused-stroke: #2a2a2a; --unused-cross: #6a6a6a;
   --mini-key-off: #20262c; --mini-key-on: #26e64c;
-  /* Finger colours (ortho grid) */
-  --f-pinky: rgba(255,100,100,.12); --f-ring: rgba(255,200,100,.12);
-  --f-middle: rgba(100,255,100,.12); --f-index: rgba(100,150,255,.18);
+  /* Finger colour map */
+  --fl-pinky: #FFDD6B; --fl-ring: #FFB000; --fl-middle: #F07000; --fl-index: #B94410; --fl-thumb: #612E00;
+  --fr-index: #0032A0; --fr-middle: #5340CB; --fr-ring: #93B0FF; --fr-pinky: #A0DEFF; --fr-thumb: #30D090;
 }
 :root[data-theme="light"] {
   --bg-page: #d1d1d6;  --bg-card: #e5e5ea;  --bg-inset: #bcbcc0;
-  --text-main: #1a1a1a; --text-muted: #444;  --text-dim: #777;
-  --key-fill: #f4f4f8; --stroke: #a1a1aa;    --svg-text: #333;
+  --t-nav: #9a5200;  --t-sym: #4f53d8;  --t-acc: #007a1c;
+  --text-main: #1a1a1a; --text-muted: #3d3d3d; --text-dim: #595959;
+  --key-fill: #f4f4f8; --stroke: #85858e;    --svg-text: #333;
   --special-key-text: #111; --special-bg: #dcdce0;
   --mod-box-bg: #dadade; --mod-box-border: #ababaf; --mod-box-text: #111;
-  --unused-fill: #e8e8ed; --unused-stroke: #c2c2c7; --unused-cross: #999;
-  --accent-sym: #4f53d8;
+  --unused-fill: #e8e8ed; --unused-stroke: #c2c2c7; --unused-cross: #777;
   --mini-key-off: #abb1b8; --mini-key-on: #00bb23;
-  --f-pinky: rgba(255,100,100,.08); --f-ring: rgba(255,200,100,.08);
-  --f-middle: rgba(100,255,100,.08); --f-index: rgba(100,150,255,.12);
 }
 
 /* ==========================================================================
@@ -61,6 +63,7 @@ body {
   font-size: .75rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; transition: .2s;
 }
 .ctrl-btn.active { background: var(--accent-nav); color: #000; }
+:focus-visible { outline: 2px solid var(--text-main); outline-offset: 2px; }
 
 /* Big rounded containers */
 .card {
@@ -86,7 +89,7 @@ body {
    ========================================================================== */
 .sec-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
 .sec-head h2 { margin: 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
-.tip { font-size: .75rem; font-weight: 700; color: var(--accent-nav); }
+.tip { font-size: .75rem; font-weight: 700; color: var(--t-nav); }
 
 /* Analysis settings chips (Tool / Engine / Spacegrams) */
 .params { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-bottom: 8px; }
@@ -117,7 +120,7 @@ body {
 }
 .stat-content { position: relative; z-index: 1; }
 .stat-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
-.stat-lang { font-size: .88rem; font-weight: 700; color: var(--accent-nav); }
+.stat-lang { font-size: .88rem; font-weight: 700; color: var(--t-nav); }
 .stat-meta { font-family: monospace; font-size: .65rem; color: var(--text-dim); }
 .stat-values { display: flex; gap: 14px; margin-top: 3px; font-size: .8rem; }
 .stat-label { margin-right: 4px; font-size: .62rem; text-transform: uppercase; color: var(--text-muted); }
@@ -131,7 +134,7 @@ body {
 }
 .stat-cta i { font-style: normal; font-size: .75rem; line-height: 1; transition: transform .2s; }
 .stat-cta .c { display: none; }
-.stat-item:hover .stat-cta, .stat-item.on .stat-cta { color: var(--accent-nav); }
+.stat-item:hover .stat-cta, .stat-item.on .stat-cta { color: var(--t-nav); }
 .stat-item.on .stat-cta i { transform: rotate(180deg); }
 .stat-item.on .stat-cta .o { display: none; }
 .stat-item.on .stat-cta .c { display: inline; }
@@ -140,7 +143,7 @@ body {
 
 /* Details panel */
 .full-stats {
-  --alt: #2fbf4a; --red: #e88a33; --roll: #7d82f7;  /* trigram category colours */
+  --alt: #30D090; --red: #F07000; --roll: #5340CB;  /* trigram categories (colours taken from the map) */
   margin-top: 12px; padding: 14px; background: rgba(128,128,128,.04);
   border: 1px solid var(--accent-nav); border-radius: 14px;
 }
@@ -150,7 +153,7 @@ body {
 @keyframes grow { from { transform: scaleX(0); } }
 
 .fs-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.fs-head b { display: block; font-size: 1.05rem; color: var(--accent-nav); }
+.fs-head b { display: block; font-size: 1.05rem; color: var(--t-nav); }
 .fs-head small { font-family: monospace; font-size: .7rem; color: var(--text-dim); }
 .fs-head .x {
   width: 32px; height: 32px; margin-left: auto; cursor: pointer; font-size: .85rem;
@@ -199,11 +202,11 @@ body {
 .nm > * { flex: 1; text-align: center; font-weight: 600; }
 .bl, .br { position: relative; display: flex; align-items: center; height: 22px; }
 .bl { justify-content: flex-end; }
-.bl span, .br span { display: block; height: 100%; background: var(--c); opacity: .55; border-radius: 4px; animation: grow .6s ease both; }
-.bl span { transform-origin: right; } .br span { transform-origin: left; }
-.bl em, .br em { position: absolute; font-size: .72rem; font-style: normal; font-weight: 700; }
+.bl span, .br span { display: block; height: 100%; border-radius: 4px; box-shadow: 0 0 0 1px rgba(128,128,128,.55); animation: grow .6s ease both; }
+.bl span { background: var(--lc); transform-origin: right; } .br span { background: var(--rc); transform-origin: left; }
+.bl em, .br em { position: absolute; padding: 0 4px; font-size: .72rem; font-style: normal; font-weight: 700; background: var(--bg-inset); border-radius: 4px; }
 .bl em { right: 6px; } .br em { left: 6px; }
-.bn { text-align: center; font-family: inherit; font-size: .66rem; font-weight: 700; text-transform: uppercase; color: var(--c); }
+.bn { text-align: center; font-family: inherit; font-size: .66rem; font-weight: 700; text-transform: uppercase; color: var(--text-main); }
 .lgd { display: none; margin: 0 0 8px; font-size: .62rem; color: var(--text-dim); }
 @container (max-width: 480px) {
   .bf { grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr); row-gap: 2px; margin-bottom: 9px; }
@@ -217,8 +220,8 @@ body {
 }
 .bal { display: flex; height: 22px; margin: 10px 0 8px; overflow: hidden; border-radius: 11px; font-size: .68rem; font-weight: 700; color: #000; }
 .bal span { display: flex; align-items: center; justify-content: center; white-space: nowrap; }
-.bal .lft { background: var(--accent-nav); }
-.bal .rgt { background: var(--accent-sym); color: #fff; }
+.bal .lft { background: var(--fl-ring); }
+.bal .rgt { background: var(--fr-index); color: #fff; }
 .sums { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; }
 .sum { padding: 6px 8px; border: 1px solid var(--stroke); border-radius: 8px; font-size: .7rem; line-height: 1.5; color: var(--text-muted); }
 .sum b { display: block; font-size: .65rem; letter-spacing: .5px; text-transform: uppercase; color: var(--text-main); }
@@ -229,15 +232,20 @@ body {
 .ortho-title { display: block; margin-bottom: 15px; text-align: center; font-size: .8rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
 .ortho-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) 15px repeat(5, minmax(0, 1fr)); gap: 6px; max-width: 550px; margin: 0 auto; }
 .ortho-key {
-  display: flex; align-items: center; justify-content: center; aspect-ratio: 1.15;
+  position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 1.15;
   background: var(--key-fill); border: 1px solid var(--stroke); border-radius: 5px;
   font-size: clamp(.6rem, 3vw, .95rem); font-weight: 600; text-transform: uppercase;
 }
 .ortho-gap { grid-column: 6; }
-.f-p { background: var(--f-pinky);  border-color: rgba(255,100,100,.3); }
-.f-r { background: var(--f-ring);   border-color: rgba(255,200,100,.3); }
-.f-m { background: var(--f-middle); border-color: rgba(100,255,100,.3); }
-.f-i { background: var(--f-index);  border-color: rgba(100,150,255,.4); }
+.c-lp, .c-lr, .c-lm, .c-li, .c-ri, .c-rm, .c-rr, .c-rp { border-color: rgba(0,0,0,.35); }
+.c-lp { background: var(--fl-pinky);  color: #000; }  /* left pinky  */
+.c-lr { background: var(--fl-ring);   color: #000; }  /* left ring   */
+.c-lm { background: var(--fl-middle); color: #000; }  /* left middle */
+.c-li { background: var(--fl-index);  color: #fff; }  /* left index (2 columns) */
+.c-ri { background: var(--fr-index);  color: #fff; }  /* right index (2 columns) */
+.c-rm { background: var(--fr-middle); color: #fff; }  /* right middle */
+.c-rr { background: var(--fr-ring);   color: #000; }  /* right ring  */
+.c-rp { background: var(--fr-pinky);  color: #000; }  /* right pinky */
 
 /* ==========================================================================
    4. KEYBOARDS (SVG)
@@ -261,9 +269,9 @@ rect, path { fill: var(--key-fill); stroke: var(--stroke); stroke-width: .8px; t
 text { fill: var(--svg-text); font-size: 16px; font-weight: 500; text-anchor: middle; dominant-baseline: middle; user-select: none; }
 .l1  { fill: var(--text-main);  font-weight: 600; }   /* base character */
 .l2  { fill: var(--text-muted); }                     /* shifted character */
-.sym { fill: var(--accent-sym); font-weight: 600; }
-.acc { fill: var(--accent-acc); font-weight: 600; }
-.nav { fill: var(--accent-nav); font-weight: 600; }
+.sym { fill: var(--t-sym); font-weight: 600; }
+.acc { fill: var(--t-acc); font-weight: 600; }
+.nav { fill: var(--t-nav); font-weight: 600; }
 .key-unused rect, .key-unused path { fill: var(--unused-fill) !important; stroke: var(--unused-stroke) !important; }
 .key-unused text { fill: var(--unused-cross) !important; font-size: 13px; font-weight: 300; }
 .hold-box rect { fill: var(--mod-box-bg) !important; stroke: var(--mod-box-border) !important; }
@@ -273,10 +281,10 @@ text { fill: var(--svg-text); font-size: 16px; font-weight: 500; text-anchor: mi
 .specialKey rect, .specialKey path { fill: var(--special-bg); }
 .specialKey text { font-size: 13px; font-weight: 600; fill: var(--special-key-text); }
 .nav-key rect { fill: var(--accent-nav) !important; stroke: none; }  .nav-key text { fill: #000 !important; font-weight: 700; }
-.sym-key rect { fill: var(--accent-sym) !important; stroke: none; }  .sym-key text { fill: #fff !important; font-weight: 700; }
-.acc-key rect { fill: var(--accent-acc) !important; stroke: none; }  .acc-key text { fill: #fff !important; font-weight: 700; }
+.sym-key rect { fill: var(--accent-sym) !important; stroke: none; }  .sym-key text { fill: #000 !important; font-weight: 700; }
+.acc-key rect { fill: var(--accent-acc) !important; stroke: none; }  .acc-key text { fill: #000 !important; font-weight: 700; }
 .onoff-key rect { stroke: var(--accent-nav); stroke-dasharray: 3,3; }
-.onoff-key text { fill: var(--accent-nav); font-size: 11px; font-weight: 700; }
+.onoff-key text { fill: var(--t-nav); font-size: 11px; font-weight: 700; }
 
 /* ==========================================================================
    5. COMBOS & TAP DANCE
@@ -295,11 +303,11 @@ text { fill: var(--svg-text); font-size: 16px; font-weight: 500; text-anchor: mi
 .combo-formula { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .combo-key-badge { padding: 5px 11px; font-size: .85rem; font-weight: 700; background: var(--key-fill); border: 1px solid var(--stroke); border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
 .combo-plus  { font-weight: 700; color: var(--text-dim); }
-.combo-arrow { font-size: 1.15rem; font-weight: 700; color: var(--accent-nav); }
+.combo-arrow { font-size: 1.15rem; font-weight: 700; color: var(--t-nav); }
 .combo-output { padding: 5px 12px; font-size: .95rem; font-weight: 800; color: #26e64c; background: rgba(38,230,76,.12); border: 1px solid rgba(38,230,76,.45); border-radius: 6px; }
 :root[data-theme="light"] .combo-output { color: #087a20; }
 .td-n { min-width: 62px; font-size: .85rem; font-weight: 700; }
-.td-n i { margin-right: 6px; font-style: normal; letter-spacing: 2px; color: var(--accent-nav); }
+.td-n i { margin-right: 6px; font-style: normal; letter-spacing: 2px; color: var(--t-nav); }
 .combo-desc { margin: 0; font-size: .85rem; line-height: 1.4; color: var(--text-muted); }
 
 /* ==========================================================================
@@ -338,6 +346,7 @@ text { fill: var(--svg-text); font-size: 16px; font-weight: 500; text-anchor: mi
   .ctrl-btn { padding: 8px 12px; }
   .combo-card { padding: 14px; }
 }
+@media (prefers-contrast: more) { :root { --stroke: #999; --text-dim: #bbb; } :root[data-theme="light"] { --stroke: #444; --text-dim: #333; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -346,8 +355,8 @@ text { fill: var(--svg-text); font-size: 16px; font-weight: 500; text-anchor: mi
 <!-- Theme switch -->
 <div class="top-bar">
   <div class="switch-group">
-    <button class="ctrl-btn active" id="btn-dark">Dark</button>
-    <button class="ctrl-btn" id="btn-light">Light</button>
+    <button class="ctrl-btn active" id="btn-dark" aria-pressed="true">Dark</button>
+    <button class="ctrl-btn" id="btn-light" aria-pressed="false">Light</button>
   </div>
 </div>
 
@@ -384,16 +393,16 @@ text { fill: var(--svg-text); font-size: 16px; font-weight: 500; text-anchor: mi
   <div class="layer-header">
     <div class="layer-title">All Layers (Reference)</div>
     <div class="switch-group">
-      <button class="ctrl-btn active" id="btn-piantor">Piantor | 42-keys</button>
-      <button class="ctrl-btn" id="btn-rowstag">Classic ISO | Min. 39-keys</button>
+      <button class="ctrl-btn active" id="btn-piantor" aria-pressed="true">Piantor | 42-keys</button>
+      <button class="ctrl-btn" id="btn-rowstag" aria-pressed="false">Classic ISO | Min. 39-keys</button>
     </div>
   </div>
   <div class="kb" id="master"></div>
   <p class="zoom-hint">Tap a keyboard to enlarge it</p>
   <div class="controls-center">
     <div class="switch-group">
-      <button class="ctrl-btn active" id="view-sym">AltGr (Symbols)</button>
-      <button class="ctrl-btn" id="view-nav">Nav (Navigation)</button>
+      <button class="ctrl-btn active" id="view-sym" aria-pressed="true">AltGr (Symbols)</button>
+      <button class="ctrl-btn" id="view-nav" aria-pressed="false">Nav (Navigation)</button>
     </div>
   </div>
 </div>
@@ -412,7 +421,7 @@ text { fill: var(--svg-text); font-size: 16px; font-weight: 500; text-anchor: mi
 </div>
 
 <!-- Fullscreen keyboard viewer -->
-<div id="viewer" hidden>
+<div id="viewer" hidden role="dialog" aria-modal="true" aria-label="Enlarged keyboard">
   <button class="v-close" type="button" aria-label="Close">✕</button>
   <div class="v-stage" id="v-stage"></div>
 </div>
@@ -441,6 +450,9 @@ const KEYS = {
 
 /* Home-row mods, shown as small boxes on the ISO alpha layer only */
 const HOLD_MODS = { R: '❖', T: '^', S: '⌥', H: '⌥', E: '^', I: '❖' };
+
+/* Spoken description of each keyboard mode (for screen readers) */
+const MODE_NAMES = { normal: 'alpha layer', acc: 'accents layer', sym: 'symbols layer', nav: 'navigation layer', allsym: 'all layers with symbols', allnav: 'all layers with navigation' };
 
 /* The layer cards shown in the grid */
 const LAYERS = [
@@ -508,7 +520,7 @@ const PARAMS = [['Tool', 'akl.gg'], ['Engine', 'Mana2'], ['Spacegrams', 'auto']]
 const ORTHO = ['b','l','d','c','v','gap','z',"'",'o','u','x',
                'n','r','t','s','f','gap','y','h','e','i','a',
                'qu','j','m','g','w','gap','k','p',',','.',':'];
-const FINGER_CLASS = ['f-p','f-r','f-m','f-i','f-i','gap','f-i','f-i','f-m','f-r','f-p'];
+const FINGER_CLASS = ['c-lp','c-lr','c-lm','c-li','c-li','gap','c-ri','c-ri','c-rm','c-rr','c-rp'];
 
 /* akl.gg statistics, stored as compact strings (parsed once by parseStats).
      bg   : 4 rows (Same Finger, Same Key, Stretch, Scissor) -> "bigram skipgram"
@@ -535,7 +547,6 @@ const STATS = {
 const TRIGRAM_LABELS   = ['Alternation', 'Alt & SFS', 'Redirect Total', 'Red & SFS', 'Weak', 'Weak & SFS', 'Roll Total', 'Inroll2', 'Outroll2', 'Inroll3', 'Outroll3'];
 const TRIGRAM_IS_SUB   = [0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1];  // 1 = indented sub-row
 const TRIGRAM_CATEGORY = ['alt','alt','red','red','red','red','roll','roll','roll','roll','roll'];
-const FINGER_COLOR = { pinky: '#ff6464', ring: '#ffb84d', middle: '#4fd66a', index: '#5b92ff', thumb: '#9a9a9a' };
 
 /* Tiny inline SVG flags (remote images are not allowed on published pages) */
 const FLAGS = {
@@ -549,6 +560,12 @@ const FLAGS = {
    ========================================================================== */
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/* Switch buttons: visual state (+ check mark via CSS) and screen-reader state */
+function setActive(id, on) {
+  const btn = $(id);
+  btn.classList.toggle('active', on);
+  btn.setAttribute('aria-pressed', on);
+}
 const flagUrl = code => `url('data:image/svg+xml,${encodeURIComponent(FLAGS[code])}')`;
 
 const state = {
@@ -622,7 +639,7 @@ function piantorHand(hand, mode) {
 
 function buildPiantor(mode) {
   // The viewBox is cropped tightly around the keys so they render as large as possible.
-  return `<svg viewBox="54 0 898 320" xmlns="http://www.w3.org/2000/svg">${piantorHand(PIANTOR.left, mode)}${piantorHand(PIANTOR.right, mode)}</svg>`;
+  return `<svg viewBox="54 0 898 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Piantor keyboard, ${MODE_NAMES[mode]}">${piantorHand(PIANTOR.left, mode)}${piantorHand(PIANTOR.right, mode)}</svg>`;
 }
 
 /* ---- Classic ISO (row-staggered, 5 rows; unused keys are greyed out) ---- */
@@ -679,7 +696,7 @@ function buildIso(mode) {
     .map((content, i) => `<g transform="translate(0 ${54 * i})">${content}</g>`).join('');
 
   // Tight viewBox around the 5 rows (content spans x 153..927, y 27..289)
-  return `<svg viewBox="143 17 794 282" xmlns="http://www.w3.org/2000/svg"><g transform="translate(153 27)">${rows}</g></svg>`;
+  return `<svg viewBox="143 17 794 282" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Classic ISO keyboard, ${MODE_NAMES[mode]}"><g transform="translate(153 27)">${rows}</g></svg>`;
 }
 
 const buildKeyboard = mode => state.geometry === 'piantor' ? buildPiantor(mode) : buildIso(mode);
@@ -697,7 +714,7 @@ function miniKeyboard(activeIds) {
     const thumbKeys = thumbs.map(([tx, ty], i) => rect(tx, ty, `${side}T${i}`)).join('');
     return `<g transform="translate(${x} 4)">${keys}${thumbKeys}</g>`;
   };
-  return `<svg viewBox="0 0 240 75">${hand('L')}${hand('R')}</svg>`;
+  return `<svg viewBox="0 0 240 75" aria-hidden="true">${hand('L')}${hand('R')}</svg>`;
 }
 
 function renderCombos() {
@@ -763,7 +780,7 @@ function renderHands(lang) {
 
   const fingerRows = fingers.map((finger, i) => {
     const [lUsage, lSpeed, lWeighted, rUsage, rSpeed, rWeighted] = lang.hd[i];
-    return `<div class="bf" style="--c:${FINGER_COLOR[finger]}">` +
+    return `<div class="bf" style="--lc:var(--fl-${finger});--rc:var(--fr-${finger})">` +
       numbers(lWeighted, 'W', lSpeed, 'F') +
       `<div class="bl"><span style="width:${lUsage / maxUsage * 100}%"></span><em>${lUsage}%</em></div>` +
       `<div class="bn">${finger}</div>` +
@@ -843,16 +860,16 @@ function renderKeyboards() {
 
 function setTheme(theme) {
   document.documentElement.dataset.theme = theme;
-  $('btn-dark').classList.toggle('active', theme !== 'light');
-  $('btn-light').classList.toggle('active', theme === 'light');
+  setActive('btn-dark', theme !== 'light');
+  setActive('btn-light', theme === 'light');
   try { localStorage.setItem('theme', theme); } catch (e) { /* storage may be unavailable */ }
 }
 
 function setGeometry(geometry) {
   state.geometry = geometry;
   const isPiantor = geometry === 'piantor';
-  $('btn-piantor').classList.toggle('active', isPiantor);
-  $('btn-rowstag').classList.toggle('active', !isPiantor);
+  setActive('btn-piantor', isPiantor);
+  setActive('btn-rowstag', !isPiantor);
   $('layout-badge').textContent = isPiantor ? 'Piantor | 42-keys' : 'Classic ISO | Min. 39-keys';
   document.querySelectorAll('[data-piantor-only]').forEach(el => { el.hidden = !isPiantor; });  // combos only make sense on Piantor
   renderKeyboards();
@@ -860,8 +877,8 @@ function setGeometry(geometry) {
 
 function setView(view) {
   state.view = view;
-  $('view-sym').classList.toggle('active', view === 'sym');
-  $('view-nav').classList.toggle('active', view === 'nav');
+  setActive('view-sym', view === 'sym');
+  setActive('view-nav', view === 'nav');
   renderKeyboards();
 }
 
