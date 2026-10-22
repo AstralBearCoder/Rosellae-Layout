@@ -22,8 +22,6 @@
 | A **normal ISO keyboard** on **Windows** (laptop or desktop) | [Kanata setup](#-classic-iso-keyboard-kanata-windows) | ~2 min |
 | Any other 30+ key keyboard | Use the [viewer](https://astralbearcoder.github.io/Rosellae-Layout/) as a reference and adapt the layout | n/a |
  
----
- 
 ## ✨ Why Rosellæ?
  
 - **One alpha layer for three languages.** No switching, no compromise between French, English and Spanish.
