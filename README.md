@@ -7,7 +7,7 @@ _The colors show which finger types each key (red: pinky, orange: ring, green: m
 
 ### Optimized for typing in French, English & Spanish.
 
-![Rosellae, Base 30-key letter layout](Screen/6)
+![Rosellae, Base 30-key letter layout](Screen/7)
 
 
 ## A-Rosellae (Astral-Rosellae)
@@ -31,11 +31,11 @@ The A-Rosellae Layout is based on the  `United States International` system layo
 I PERSONALLY use it on: 
 - **Piantor BT** (ZMK firmware) - 42-keys
 
-![Rosellæ on the Piantor, with all layers](Screen/2)
+![Rosellæ on the Piantor, with all layers](Screen/8)
 
 - **Any Classic ISO keyboard** (Kanata software remapper) - 39-keys
 
-![Rosellæ on ISO Classic, with all layers](Screen/3)
+![Rosellæ on ISO Classic, with all layers](Screen/9)
 
 
 ---
@@ -44,7 +44,7 @@ I PERSONALLY use it on:
 
 This version is designed specifically for a 42-key split layout with a 6-key thumb cluster. The configuration files target the **Piantor BT**. It relies entirely on dedicated physical keys, sticky modifiers, and hardware combos—**no home row mods are used here**.
 
-![Rosellæ on the Piantor, with all layers](Screen/2)
+![Rosellæ on the Piantor, with all layers](Screen/8)
 
 ---
 
@@ -75,7 +75,7 @@ This configuration is fully compatible with [Keymap Editor](https://nickcoutsos.
 
 This version brings the complete Rosellæ experience to **any standard physical ISO keyboard** (laptop or desktop) without custom hardware, using the high-performance remapper [Kanata](https://github.com/jtroo/kanata).
 
-![Rosellæ on ISO Classic, with all layers](Screen/3)
+![Rosellæ on ISO Classic, with all layers](Screen/9)
 
 ---
 
