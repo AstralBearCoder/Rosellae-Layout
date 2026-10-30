@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rosellæ - Piantor | 42-keys &amp; Classic ISO | Min. 39-keys</title>
+<style>
+/* ==========================================================================
+   1. THEME TOKENS
+   Dark is the default; the light theme overrides the same variables.
+   ========================================================================== */
+/* The finger colour map (warm = left hand, cool = right hand, lighter towards the pinky)
+   is defined below as --fl-* (left) and --fr-* (right). */
+:root {
+  --bg-page: #0a0a0a;  --bg-card: #121212;  --bg-inset: #1a1a1a;
+  --accent-nav: #F07000;  --accent-sym: #93B0FF;  --accent-acc: #30D090;   /* orange / periwinkle / green of the colour map */
+  /* Accents as text colours (tuned for contrast on each theme) */
+  --t-nav: #F07000;  --t-sym: #93B0FF;  --t-acc: #30D090;
+  --text-main: #eee;   --text-muted: #aaa;   --text-dim: #8c8c8c;
+  --key-fill: #202020; --stroke: #3a3a3a;    --svg-text: #999;
+  --special-key-text: #bbb; --special-bg: #181818;
+  --mod-box-bg: #282828; --mod-box-border: #444; --mod-box-text: #bbb;
+  --unused-fill: #151515; --unused-stroke: #2a2a2a; --unused-cross: #6a6a6a;
+  --mini-key-off: #20262c; --mini-key-on: #30D090;
+  /* Finger colour map */
+  --fl-pinky: #FFDD6B; --fl-ring: #FFB000; --fl-middle: #F07000; --fl-index: #B94410; --fl-thumb: #612E00;
+  --fr-index: #0032A0; --fr-middle: #5340CB; --fr-ring: #93B0FF; --fr-pinky: #A0DEFF; --fr-thumb: #30D090;
+}
+:root[data-theme="light"] {
+  --bg-page: #d1d1d6;  --bg-card: #e5e5ea;  --bg-inset: #bcbcc0;
+  --t-nav: #B94410;  --t-sym: #5340CB;  --t-acc: #087048;
+  --text-main: #1a1a1a; --text-muted: #3d3d3d; --text-dim: #595959;
+  --key-fill: #f4f4f8; --stroke: #85858e;    --svg-text: #333;
+  --special-key-text: #111; --special-bg: #dcdce0;
+  --mod-box-bg: #dadade; --mod-box-border: #ababaf; --mod-box-text: #111;
+  --unused-fill: #e8e8ed; --unused-stroke: #c2c2c7; --unused-cross: #777;
+  --mini-key-off: #4a5159; --mini-key-on: #30D090;
+}
+
+/* ==========================================================================
+   2. BASE & SHARED COMPONENTS
+   ========================================================================== */
+* { box-sizing: border-box; }
+body {
+  margin: 0; width: 100%;
+  padding: calc(15px + env(safe-area-inset-top, 0px)) 15px calc(15px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--bg-page); color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden; transition: background-color .3s, color .3s;
+}
+.top-bar { width: 100%; max-width: 1200px; display: flex; justify-content: flex-end; margin-bottom: 20px; }
+
+/* Pill-shaped segmented control (theme, geometry, view switches) */
+.switch-group {
+  display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px; padding: 4px;
+  background: var(--bg-card); border: 1px solid var(--stroke); border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0,0,0,.2);
+}
+.ctrl-btn {
+  min-height: 36px; padding: 8px 16px; border: 0; border-radius: 40px; cursor: pointer;
+  background: transparent; color: var(--text-muted);
+  font-size: .75rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; transition: .2s;
+}
+.ctrl-btn.active { background: var(--accent-nav); color: #000; }
+:focus-visible { outline: 2px solid var(--text-main); outline-offset: 2px; }
+
+/* Big rounded containers */
+.card {
+  width: 100%; max-width: 1200px; padding: 24px;
+  background: var(--bg-card); border: 1px solid var(--stroke); border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.4);
+}
+.card.intro { margin: 0 auto 30px; }
+.card.extra { margin: 30px auto 0; display: flex; flex-direction: column; gap: 20px; }
+.card.extra[hidden] { display: none; }
+
+.header-top { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+.header-top h1 { margin: 0; font-size: 1.8rem; letter-spacing: -1px; }
+.header-top p { margin: 5px 0 0; color: var(--text-muted); font-size: .95rem; }
+.badge {
+  align-self: flex-start; padding: 8px 18px; border-radius: 6px;
+  background: var(--accent-nav); color: #000; font-size: .8rem; font-weight: 800; text-transform: uppercase;
+}
+.dashboard { display: flex; flex-direction: column; gap: 25px; padding-top: 25px; border-top: 1px solid var(--stroke); }
+
+/* ==========================================================================
+   3. STATISTICS (pills + per-language details)
+   ========================================================================== */
+.sec-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.sec-head h2 { margin: 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+.tip { font-size: .75rem; font-weight: 700; color: var(--t-nav); }
+
+/* Analysis settings chips (Tool / Engine / Spacegrams) */
+.params { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-bottom: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px;
+  background: var(--bg-inset); border: 1px solid var(--stroke); border-radius: 50px; font-size: .65rem;
+}
+.chip b { font-size: .58rem; font-weight: 600; text-transform: uppercase; color: var(--text-dim); }
+.chip span { font-family: monospace; font-weight: 700; }
+
+/* One clickable pill per language */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 8px; }
+.stat-item {
+  position: relative; overflow: hidden; width: 100%; padding: 8px 12px;
+  font: inherit; color: inherit; text-align: left; cursor: pointer;
+  background: rgba(128,128,128,.04); border: 1px solid var(--stroke); border-radius: 10px;
+  transition: border-color .2s, background .2s, transform .1s;
+}
+.stat-item:hover { border-color: var(--text-dim); }
+.stat-item:active { transform: scale(.98); }
+.stat-item:focus-visible { outline: 2px solid var(--accent-nav); outline-offset: 2px; }
+.stat-item.on { border-color: var(--accent-nav); background: rgba(240,112,0,.1); }
+.stat-flag {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 90px; opacity: .22; pointer-events: none;
+  background-size: cover; background-position: center;
+  -webkit-mask-image: linear-gradient(to left, #000 10%, transparent 100%);
+          mask-image: linear-gradient(to left, #000 10%, transparent 100%);
+}
+.stat-content { position: relative; z-index: 1; }
+.stat-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+.stat-lang { font-size: .88rem; font-weight: 700; color: var(--t-nav); }
+.stat-meta { font-family: monospace; font-size: .65rem; color: var(--text-dim); }
+.stat-values { display: flex; gap: 14px; margin-top: 3px; font-size: .8rem; }
+.stat-label { margin-right: 4px; font-size: .62rem; text-transform: uppercase; color: var(--text-muted); }
+.stat-numb { font-family: monospace; font-weight: 700; }
+
+/* Discreet "open details" footer inside each pill */
+.stat-cta {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  margin: 8px -12px -8px; padding: 5px 12px; border-top: 1px solid var(--stroke);
+  font-size: .66rem; font-weight: 600; color: var(--text-dim); transition: color .2s;
+}
+.stat-cta i { font-style: normal; font-size: .75rem; line-height: 1; transition: transform .2s; }
+.stat-cta .c { display: none; }
+.stat-item:hover .stat-cta, .stat-item.on .stat-cta { color: var(--t-nav); }
+.stat-item.on .stat-cta i { transform: rotate(180deg); }
+.stat-item.on .stat-cta .o { display: none; }
+.stat-item.on .stat-cta .c { display: inline; }
+.stats-row.hint .stat-cta i { animation: nudge 1.6s ease-in-out infinite; }  /* stops after the first tap */
+@keyframes nudge { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(3px); } }
+
+/* Details panel */
+.full-stats {
+  --alt: #30D090; --red: #F07000; --roll: #5340CB;  /* trigram categories (colours taken from the map) */
+  margin-top: 12px; padding: 14px; background: rgba(128,128,128,.04);
+  border: 1px solid var(--accent-nav); border-radius: 14px;
+}
+.full-stats[hidden] { display: none; }
+.full-stats:not([hidden]) { animation: pop .25s ease; }
+@keyframes pop  { from { opacity: 0; transform: translateY(-6px); } }
+@keyframes grow { from { transform: scaleX(0); } }
+
+.fs-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.fs-head b { display: block; font-size: 1.05rem; color: var(--t-nav); }
+.fs-head small { font-family: monospace; font-size: .7rem; color: var(--text-dim); }
+.fs-head .x {
+  width: 32px; height: 32px; margin-left: auto; cursor: pointer; font-size: .85rem;
+  background: var(--bg-inset); border: 1px solid var(--stroke); border-radius: 50px; color: var(--text-muted);
+}
+.flg { flex: none; width: 30px; height: 20px; border: 1px solid var(--stroke); border-radius: 4px; background-size: cover; background-position: center; }
+
+/* Headline tiles (Same Finger / Same Key / Stretch / Scissor) */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr)); gap: 8px; margin-bottom: 12px; }
+.tile { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; background: var(--bg-inset); border: 1px solid var(--stroke); border-radius: 12px; }
+.tile:first-child { border-color: var(--accent-nav); }
+.tl  { font-size: .64rem; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); }
+.tv  { font-family: monospace; font-size: 1.2rem; font-weight: 700; }
+.tv2 { font-family: monospace; font-size: .88rem; font-weight: 600; color: var(--text-muted); }
+.tv small, .tv2 small { margin-left: 5px; font-family: inherit; font-size: .58rem; font-weight: 400; color: var(--text-dim); }
+
+.fs-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+@media (min-width: 900px) { .fs-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+.fs-card { min-width: 0; padding: 12px; background: var(--bg-inset); border: 1px solid var(--stroke); border-radius: 12px; container-type: inline-size; }
+.fs-card h3 { margin: 0 0 10px; font-size: .7rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+
+/* Trigram bar + rows (each row has a background bar proportional to its value) */
+.alt { --c: var(--alt); } .red { --c: var(--red); } .roll { --c: var(--roll); }
+.stack { display: flex; height: 14px; margin-bottom: 8px; overflow: hidden; border-radius: 7px; background: rgba(128,128,128,.2); }
+.stack span { display: block; height: 100%; background: var(--c); transform-origin: left; animation: grow .6s ease both; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 10px; font-size: .72rem; color: var(--text-muted); }
+.lg i { display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 50%; background: var(--c); }
+.lg b { font-family: monospace; color: var(--text-main); }
+.tg {
+  display: grid; grid-template-columns: 1fr 64px 72px; gap: 6px; margin-bottom: 2px; padding: 4px 8px;
+  font-size: .78rem; border-left: 3px solid var(--c, transparent); border-radius: 6px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--c, #888) 28%, transparent) var(--w, 0%), transparent var(--w, 0%));
+}
+.tg b { font-family: monospace; font-weight: 700; text-align: right; }
+.tg b.nt { font-weight: 500; color: var(--text-muted); }
+.tg.sub { margin-left: 12px; font-size: .72rem; color: var(--text-muted); }
+.tg.sub b { font-weight: 500; }
+.tg.hd { background: none; border-left-color: transparent; font-size: .62rem; text-transform: uppercase; color: var(--text-dim); }
+
+/* Hands & fingers: mirrored bars. Wide = one row per finger, narrow = two lines per finger (no scrolling). */
+.bf { display: grid; grid-template-columns: 92px minmax(0, 1fr) 56px minmax(0, 1fr) 92px; align-items: center; gap: 4px; margin-bottom: 4px; font-family: monospace; font-size: .74rem; }
+.bf.hd { margin-bottom: 6px; font-size: .54rem; text-transform: uppercase; color: var(--text-dim); }
+.bf.hd > span { text-align: center; }
+.bf.hd .nm > * { font-weight: 400; }
+.nm { display: flex; }
+.nm > * { flex: 1; text-align: center; font-weight: 600; }
+.bl, .br { position: relative; display: flex; align-items: center; height: 22px; }
+.bl { justify-content: flex-end; }
+.bl span, .br span { display: block; height: 100%; border-radius: 4px; box-shadow: 0 0 0 1px rgba(128,128,128,.55); animation: grow .6s ease both; }
+.bl span { background: var(--lc); transform-origin: right; } .br span { background: var(--rc); transform-origin: left; }
+.bl em, .br em { position: absolute; padding: 0 4px; font-size: .72rem; font-style: normal; font-weight: 700; background: var(--bg-inset); border-radius: 4px; }
+.bl em { right: 6px; } .br em { left: 6px; }
+.bn { text-align: center; font-family: inherit; font-size: .66rem; font-weight: 700; text-transform: uppercase; color: var(--text-main); }
+.lgd { display: none; margin: 0 0 8px; font-size: .62rem; color: var(--text-dim); }
+@container (max-width: 480px) {
+  .bf { grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr); row-gap: 2px; margin-bottom: 9px; }
+  .bf.hd { display: none; }
+  .lgd { display: block; }
+  .bf .bl { grid-area: 1 / 1; } .bf .bn { grid-area: 1 / 2; } .bf .br { grid-area: 1 / 3; }
+  .bf > .nm:first-child { grid-area: 2 / 1; justify-content: flex-start; gap: 10px; }
+  .bf > .nm:last-child  { grid-area: 2 / 3; justify-content: flex-end;   gap: 10px; }
+  .nm > * { flex: none; }
+  .nm b::before { content: attr(data-l); margin-right: 3px; font-size: .58rem; font-weight: 400; color: var(--text-dim); }
+}
+.bal { display: flex; height: 22px; margin: 10px 0 8px; overflow: hidden; border-radius: 11px; font-size: .68rem; font-weight: 700; color: #000; }
+.bal span { display: flex; align-items: center; justify-content: center; white-space: nowrap; }
+.bal .lft { background: var(--fl-ring); }
+.bal .rgt { background: var(--fr-index); color: #fff; }
+.sums { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; }
+.sum { padding: 6px 8px; border: 1px solid var(--stroke); border-radius: 8px; font-size: .7rem; line-height: 1.5; color: var(--text-muted); }
+.sum b { display: block; font-size: .65rem; letter-spacing: .5px; text-transform: uppercase; color: var(--text-main); }
+.sum span { font-family: monospace; color: var(--text-main); }
+
+/* Ortho grid */
+.ortho-box { width: 100%; max-width: 720px; margin: 0 auto; padding: 20px; overflow: hidden; background: var(--bg-inset); border-radius: 14px; }
+.ortho-title { display: block; margin-bottom: 15px; text-align: center; font-size: .8rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+.ortho-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) 15px repeat(5, minmax(0, 1fr)); gap: 6px; max-width: 550px; margin: 0 auto; }
+.ortho-key {
+  position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 1.15;
+  background: var(--key-fill); border: 1px solid var(--stroke); border-radius: 5px;
+  font-size: clamp(.6rem, 3vw, .95rem); font-weight: 600; text-transform: uppercase;
+}
+.ortho-gap { grid-column: 6; }
+.c-lp, .c-lr, .c-lm, .c-li, .c-ri, .c-rm, .c-rr, .c-rp { border-color: rgba(0,0,0,.35); }
+.c-lp { background: var(--fl-pinky);  color: #000; }  /* left pinky  */
+.c-lr { background: var(--fl-ring);   color: #000; }  /* left ring   */
+.c-lm { background: var(--fl-middle); color: #fff; }  /* left middle (D T M) */
+.c-li { background: var(--fl-index);  color: #fff; }  /* left index (2 columns) */
+.c-ri { background: var(--fr-index);  color: #fff; }  /* right index (2 columns) */
+.c-rm { background: var(--fr-middle); color: #fff; }  /* right middle */
+.c-rr { background: var(--fr-ring);   color: #000; }  /* right ring  */
+.c-rp { background: var(--fr-pinky);  color: #000; }  /* right pinky */
+
+/* ==========================================================================
+   4. KEYBOARDS (SVG)
+   The SVG always scales to the container width: no scrollbar, no splitting.
+   ========================================================================== */
+.kb-section { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 20px 15px; background: var(--bg-card); border: 1px solid var(--stroke); border-radius: 18px; }
+.kb-section.full { max-width: 1200px; margin-bottom: 30px; }
+.layers-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; width: 100%; max-width: 1200px; }
+@media (min-width: 1100px) { .layers-grid { grid-template-columns: 1fr 1fr; } }
+.layer-header { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 1px solid var(--stroke); }
+.layer-title { margin: 0; text-align: center; font-size: 1rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+.layer-subtitle { display: block; font-size: .75rem; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text-muted); }
+.controls-center { display: flex; justify-content: center; width: 100%; margin-top: 20px; }
+.zoom-hint { display: none; margin: 8px 0 0; font-size: .7rem; color: var(--text-dim); }
+
+.kb { width: 100%; max-width: 980px; margin: 0 auto; }
+.kb svg { display: block; width: 100%; height: auto; }
+
+/* SVG element styling */
+rect, path { fill: var(--key-fill); stroke: var(--stroke); stroke-width: .8px; transition: fill .3s, stroke .3s; }
+text { fill: var(--svg-text); font-size: 16px; font-weight: 500; text-anchor: middle; dominant-baseline: middle; user-select: none; }
+.l1  { fill: var(--text-main);  font-weight: 600; }   /* base character */
+.l2  { fill: var(--text-muted); }                     /* shifted character */
+.sym { fill: var(--t-sym); font-weight: 600; }
+.acc { fill: var(--t-acc); font-weight: 600; }
+.nav { fill: var(--t-nav); font-weight: 600; }
+.key-unused rect, .key-unused path { fill: var(--unused-fill) !important; stroke: var(--unused-stroke) !important; }
+.key-unused text { fill: var(--unused-cross) !important; font-size: 13px; font-weight: 300; }
+.hold-box rect { fill: var(--mod-box-bg) !important; stroke: var(--mod-box-border) !important; }
+.hold-box text { fill: var(--mod-box-text) !important; font-size: 10px !important; font-weight: 700 !important; }
+.nav-pill rect { fill: var(--accent-nav) !important; stroke: none !important; }
+.nav-pill text { fill: #000 !important; font-size: 11px !important; font-weight: 800 !important; letter-spacing: 1px; }
+.specialKey rect, .specialKey path { fill: var(--special-bg); }
+.specialKey text { font-size: 13px; font-weight: 600; fill: var(--special-key-text); }
+.nav-key rect { fill: var(--accent-nav) !important; stroke: none; }  .nav-key text { fill: #000 !important; font-weight: 700; }
+.sym-key rect { fill: var(--accent-sym) !important; stroke: none; }  .sym-key text { fill: #000 !important; font-weight: 700; }
+.acc-key rect { fill: var(--accent-acc) !important; stroke: none; }  .acc-key text { fill: #000 !important; font-weight: 700; }
+.onoff-key rect { stroke: var(--accent-nav); stroke-dasharray: 3,3; }
+.onoff-key text { fill: var(--t-nav); font-size: 11px; font-weight: 700; }
+
+/* ==========================================================================
+   5. COMBOS & TAP DANCE
+   ========================================================================== */
+.combos-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding-bottom: 15px; border-bottom: 1px solid var(--stroke); }
+.combos-header h2 { margin: 0; font-size: 1.25rem; letter-spacing: 1px; text-transform: uppercase; }
+.combos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 20px; }
+.combo-card { display: flex; flex-direction: column; gap: 14px; padding: 20px; background: var(--bg-inset); border: 1px solid var(--stroke); border-radius: 14px; }
+.combo-top { display: flex; justify-content: space-between; align-items: center; }
+.combo-name { font-size: 1.1rem; font-weight: 800; }
+.combo-meta { padding: 3px 8px; font-family: monospace; font-size: .75rem; color: var(--text-dim); background: rgba(0,0,0,.25); border: 1px solid var(--stroke); border-radius: 4px; }
+.mini-preview-wrap { display: flex; justify-content: center; width: 100%; padding: 8px 10px; background: rgba(0,0,0,.35); border: 1px solid var(--stroke); border-radius: 8px; }
+.mini-preview-wrap svg { width: 100%; max-width: 250px; height: auto; aspect-ratio: 240 / 75; }
+.m-key { fill: var(--mini-key-off); stroke: var(--stroke); stroke-width: .6px; }
+.m-on  { fill: var(--mini-key-on) !important; stroke: var(--mini-key-on) !important; stroke-width: 1px; filter: drop-shadow(0 0 4px rgba(48,208,144,.6)); }
+.combo-formula { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.combo-key-badge { padding: 5px 11px; font-size: .85rem; font-weight: 700; background: var(--key-fill); border: 1px solid var(--stroke); border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+.combo-plus  { font-weight: 700; color: var(--text-dim); }
+.combo-arrow { font-size: 1.15rem; font-weight: 700; color: var(--t-nav); }
+.combo-output { padding: 5px 12px; font-size: .95rem; font-weight: 800; color: #30D090; background: rgba(48,208,144,.12); border: 1px solid rgba(48,208,144,.45); border-radius: 6px; }
+:root[data-theme="light"] .combo-output { color: #065f3f; background: rgba(6,95,63,.1); border-color: rgba(6,95,63,.5); }
+.td-n { min-width: 62px; font-size: .85rem; font-weight: 700; }
+.td-n i { margin-right: 6px; font-style: normal; letter-spacing: 2px; color: var(--t-nav); }
+.combo-desc { margin: 0; font-size: .85rem; line-height: 1.4; color: var(--text-muted); }
+
+/* ==========================================================================
+   6. FULLSCREEN KEYBOARD VIEWER (small screens only)
+   In portrait the keyboard is rotated 90° so it uses the long side of the phone.
+   ========================================================================== */
+#viewer { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-page); }
+#viewer[hidden] { display: none; }
+.v-stage { width: calc(100vw - 16px); }
+.v-close {
+  position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); right: 10px; z-index: 1;
+  width: 40px; height: 40px; cursor: pointer; font-size: 1rem;
+  background: var(--bg-card); border: 1px solid var(--stroke); border-radius: 50%; color: var(--text-main);
+}
+@media (orientation: portrait) {
+  .v-stage { flex: none; width: calc(100vh - 72px); width: calc(100dvh - 72px); transform: rotate(90deg); }
+}
+
+/* ==========================================================================
+   7. RESPONSIVE
+   ========================================================================== */
+@media (min-width: 768px) {
+  body { padding-left: 20px; padding-right: 20px; }
+  .header-top { flex-direction: row; justify-content: space-between; align-items: flex-start; }
+}
+@media (max-width: 760px) {
+  .kb { cursor: zoom-in; }
+  .zoom-hint { display: block; }
+}
+@media (max-width: 600px) {
+  body { padding-left: 10px; padding-right: 10px; }
+  .card { padding: 14px; border-radius: 14px; }
+  .kb-section { padding: 14px 10px; }
+  .header-top h1 { font-size: 1.5rem; }
+  .ortho-box { padding: 12px; }
+  .ctrl-btn { padding: 8px 12px; }
+  .combo-card { padding: 14px; }
+}
+@media (prefers-contrast: more) { :root { --stroke: #999; --text-dim: #bbb; } :root[data-theme="light"] { --stroke: #444; --text-dim: #333; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- Theme switch -->
+<div class="top-bar">
+  <div class="switch-group">
+    <button class="ctrl-btn active" id="btn-dark" aria-pressed="true">Dark</button>
+    <button class="ctrl-btn" id="btn-light" aria-pressed="false">Light</button>
+  </div>
+</div>
+
+<!-- Intro: title, statistics, ortho grid -->
+<div class="card intro">
+  <div class="header-top">
+    <div>
+      <h1>Rosellæ</h1>
+      <p>Optimized layout 50/50 French &amp; English + Spanish compatible</p>
+    </div>
+    <div class="badge" id="layout-badge">Piantor | 42-keys</div>
+  </div>
+
+  <div class="dashboard">
+    <div>
+      <div class="sec-head">
+        <h2>Statistics</h2>
+        <span class="tip">Tap a language below to open its full stats ↓</span>
+      </div>
+      <div class="params" id="params"></div>
+      <div class="stats-row hint" id="stats-row"></div>
+      <div class="full-stats" id="full-stats" hidden></div>
+    </div>
+
+    <div class="ortho-box">
+      <span class="ortho-title">Rosellæ Layout by GalileoBlue</span>
+      <div class="ortho-grid" id="ortho-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Reference keyboard with every layer -->
+<div class="kb-section full">
+  <div class="layer-header">
+    <div class="layer-title">All Layers (Reference)</div>
+    <div class="switch-group">
+      <button class="ctrl-btn active" id="btn-piantor" aria-pressed="true">Piantor | 42-keys</button>
+      <button class="ctrl-btn" id="btn-rowstag" aria-pressed="false">Classic ISO | Min. 39-keys</button>
+    </div>
+  </div>
+  <div class="kb" id="master"></div>
+  <p class="zoom-hint">Tap a keyboard to enlarge it</p>
+  <div class="controls-center">
+    <div class="switch-group">
+      <button class="ctrl-btn active" id="view-sym" aria-pressed="true">AltGr (Symbols)</button>
+      <button class="ctrl-btn" id="view-nav" aria-pressed="false">Nav (Navigation)</button>
+    </div>
+  </div>
+</div>
+
+<!-- The four individual layers (filled by JS) -->
+<div class="layers-grid" id="layers-grid"></div>
+
+<!-- Combos and tap dance (Piantor only) -->
+<div class="card extra" data-piantor-only>
+  <div class="combos-header"><div><h2>5. Combos</h2><span class="layer-subtitle">Keys pressed simultaneously</span></div></div>
+  <div class="combos-grid" id="combos-grid"></div>
+</div>
+<div class="card extra" data-piantor-only>
+  <div class="combos-header"><div><h2>6. Tap Dance</h2><span class="layer-subtitle">One tap vs. double tap on the same key (the highlighted key is the one you tap)</span></div></div>
+  <div class="combos-grid" id="td-grid"></div>
+</div>
+
+<!-- Fullscreen keyboard viewer -->
+<div id="viewer" hidden role="dialog" aria-modal="true" aria-label="Enlarged keyboard">
+  <button class="v-close" type="button" aria-label="Close">✕</button>
+  <div class="v-stage" id="v-stage"></div>
+</div>
+
+<script>
+'use strict';
+
+/* ==========================================================================
+   A. DATA
+   ========================================================================== */
+
+/* Key table. Format: id -> [base, shifted, symbols layer, accents layer, nav layer].
+   An empty string means "nothing on that layer". */
+const KEYS = {
+  B:  ['B', '', '€',  '^z', '⏮'],  N:  ['N', '', '+',  'æ',  '←'],  QU: ['QU', '', 'Qu', 'q',  '1'],
+  L:  ['L', '', '$',  '^y', '⏯'],  R:  ['R', '', '=',  'ñ',  '↓'],  J:  ['J', '', '×',  '^x', '2'],
+  D:  ['D', '', '[]', 'ö',  '⏭'],  T:  ['T', '', '()', 'œ',  '↑'],  M:  ['M', '', '{}', '^c', '3'],
+  C:  ['C', '', '^',  'ü',  '↘'],  S:  ['S', '', '*',  'ë',  '→'],  G:  ['G', '', '`',  '^v', '0'],
+  V:  ['V', '', '~',  '',   '⇟'],  F:  ['F', '', '→',  'ä',  '-'],  W:  ['W', '', '',   '^a', '+'],
+  Z:  ['Z', '', '',   'ù',  '⇞'],  Y:  ['Y', '', '#',  'ú',  '/'],  K:  ['K', '', '',   'ï',  '='],
+  "'": ["'", '"', '<', 'î', '↙'],  H:  ['H', '', '_',  'ç',  ','],  P:  ['P', '', '%',  'â',  '7'],
+  O:  ['O', '', '>',  'ê',  'f2'], E:  ['E', '', '-',  'à',  '4'],  ',': [',', '?', '¿?', 'í', '8'],
+  U:  ['U', '', '&',  'û',  'f4'], I:  ['I', '', '@',  'è',  '5'],  '.': ['.', '!', '¡!', 'ô', '9'],
+  X:  ['X', '', '\\', 'ó',  'f11'], A: ['A', '', '/',  'é',  '6'],  ':': [':', ';', '|',  'á',  '.']
+};
+
+/* Home-row mods, shown as small boxes on the ISO alpha layer only */
+const HOLD_MODS = { R: '❖', T: '^', S: '⌥', H: '⌥', E: '^', I: '❖' };
+
+/* Spoken description of each keyboard mode (for screen readers) */
+const MODE_NAMES = { normal: 'alpha layer', acc: 'accents layer', sym: 'symbols layer', nav: 'navigation layer', allsym: 'all layers with symbols', allnav: 'all layers with navigation' };
+
+/* The layer cards shown in the grid */
+const LAYERS = [
+  { mode: 'normal', title: '1. Alpha Layer' },
+  { mode: 'acc',    title: '2. Accents Layer (★)',      sub: 'One Shot Layer' },
+  { mode: 'sym',    title: '3. Symbols Layer (AltGr)',  sub: 'One Shot Layer (with auto-closing &amp; return)' },
+  { mode: 'nav',    title: '4. Navigation Layer (Nav)', sub: 'Momentary (Hold Space)' }
+];
+
+/* Piantor geometry. Each hand: x offset, per-column [dx, dy], keys per column
+   (ids found in KEYS, anything else is a plain special key) and thumb keys. */
+const PIANTOR = {
+  left: {
+    x: 64,
+    columns: [[0, 52], [58, 52], [116, 20], [174, 0], [232, 28], [290, 40]],
+    keys: [['⎋', '↹', '❖'], ['B', 'N', 'QU'], ['L', 'R', 'J'], ['D', 'T', 'M'], ['C', 'S', 'G'], ['V', 'F', 'W']],
+    thumbs: [  // [x, y, rotation, label, css class, font size]
+      [250, 238,  8, 'Shift', 'specialKey'],
+      [314, 250, 18, '★',     'acc-key'],
+      [378, 272, 28, 'Ctrl',  'specialKey']
+    ]
+  },
+  right: {
+    x: 600,
+    columns: [[0, 40], [58, 28], [116, 0], [174, 20], [232, 52], [290, 52]],
+    keys: [['Z', 'Y', 'K'], ["'", 'H', 'P'], ['O', 'E', ','], ['U', 'I', '.'], ['X', 'A', ':'], ['⌫', '⏎', '⌃⇧']],
+    thumbs: [
+      [-36, 272, -28, 'Nav',   'nav-key', 12],
+      [ 28, 250, -18, '⎵',     'specialKey', 18],
+      [ 92, 238,  -8, 'AltGr', 'sym-key', 13]
+    ]
+  }
+};
+
+/* Mini keyboard used by combo / tap dance previews.
+   Per hand: column positions [x, y] (3 rows, 12px apart) and thumb positions. */
+const MINI = {
+  L: { cols: [[0,11],[12,11],[24,4],[36,0],[48,6],[60,8]], thumbs: [[52,46],[66,49],[80,54]], x: 6 },
+  R: { cols: [[12,8],[24,6],[36,0],[48,4],[60,11],[72,11]], thumbs: [[-2,54],[12,49],[26,46]], x: 142 }
+};
+/* Key ids: "L40" = left hand, column 4, row 0.  "RT2" = right hand, thumb 2. */
+
+const COMBOS = [
+  { name: 'Power', meta: '&amp;Shutdown', on: ['RT0', 'RT1', 'RT2'], keys: ['Nav', '⎵ Space', 'AltGr'], out: 'Alt + F4',
+    desc: 'Simultaneous press of the <strong>3 right thumb keys</strong>. Triggers immediate shutdown or closes active window.' },
+  { name: 'ScreenShot', meta: '&amp;ScreenShot', on: ['L40', 'L30', 'L20'], keys: ['C', 'D', 'L'], out: 'Win + Shift + S',
+    desc: 'Simultaneous strike of <strong>C</strong>, <strong>D</strong> and <strong>L</strong> on the upper left row (mirror of the “où” combo). Instantly triggers the screen snip / screenshot utility.' },
+  { name: 'Où (full word)', meta: 'où', on: ['R10', 'R20', 'R30'], keys: ["'", 'O', 'U'], out: '“où ”',
+    desc: 'Simultaneous strike of <strong>\'</strong>, <strong>O</strong> and <strong>U</strong> on the upper right row. Directly inserts <strong>“où ”</strong> followed by a space.' }
+];
+
+const TAP_DANCES = [
+  { key: 'AltGr', on: ['RT2'], one: 'AltGr', two: 'Left Alt',
+    desc: 'Right inner thumb. One tap sends <strong>AltGr</strong> (Symbols layer), two taps send <strong>Left Alt</strong>.' },
+  { key: 'Ctrl', on: ['LT2'], one: 'Ctrl', two: 'Nav',
+    desc: 'Left outer thumb. One tap sends <strong>Ctrl</strong>, two taps activate <strong>Nav</strong>.' },
+  { key: 'Nav', on: ['RT0'], one: 'Nav', two: 'Left Alt + Space',
+    desc: 'Right outer thumb. One tap activates <strong>Nav</strong>, two taps send <strong>Left Alt + Space</strong> (Flow Launcher shortcut).' }
+];
+
+/* Analysis settings shown as chips */
+const PARAMS = [['Tool', 'akl.gg'], ['Engine', 'Mana2'], ['Spacegrams', 'auto']];
+
+/* Ortho grid content (the gap column is marked "gap") and finger colours per column */
+const ORTHO = ['b','l','d','c','v','gap','z',"'",'o','u','x',
+               'n','r','t','s','f','gap','y','h','e','i','a',
+               'qu','j','m','g','w','gap','k','p',',','.',':'];
+const FINGER_CLASS = ['c-lp','c-lr','c-lm','c-li','c-li','gap','c-ri','c-ri','c-rm','c-rr','c-rp'];
+
+/* akl.gg statistics, stored as compact strings (parsed once by parseStats).
+     bg   : 4 rows (Same Finger, Same Key, Stretch, Scissor) -> "bigram skipgram"
+     tri  : 11 rows, see TRIGRAM_LABELS                       -> "all no-thumbs"
+     hd   : 6 rows (pinky, ring, middle, index, thumb, total) -> "L usage, fspeed, weighted, R usage, fspeed, weighted"
+     both : "usage fspeed weighted" for both hands together */
+const STATS = {
+  en: { name: 'English', corpus: 'reddit', flag: 'gb',
+    bg:  '0.823 4.867|1.866 3.077|2.271 4.149|2.842 8.357',
+    tri: '41.973 20.092|5.761 4.072|7.312 1.499|2.038 0.569|0.201 0.201|0.079 0.079|45.412 21.631|20.989 8.849|21.099 11.844|0.640 0.130|2.684 0.808',
+    hd:  '6.8 0.53 0.35 6.6 0.39 0.26|7.9 1.73 0.48 9.6 3.69 1.02|12.6 6.93 1.44 16.4 10.44 2.18|13.1 11.92 2.17 9.1 6.28 1.14|0.1 0.00 0.00 17.7 0.06 0.04|40.5 21.11 4.44 59.5 20.86 4.64',
+    both: '100.0 41.96 9.08' },
+  fr: { name: 'French', corpus: 'french', flag: 'fr',
+    bg:  '0.767 4.405|1.990 3.876|1.142 2.344|5.749 11.211',
+    tri: '38.923 21.275|5.597 4.060|4.049 1.512|1.195 0.563|0.695 0.695|0.356 0.356|43.176 24.250|23.354 12.294|17.448 11.197|0.629 0.176|1.745 0.583',
+    hd:  '7.3 1.29 0.86 8.2 0.82 0.55|10.5 2.67 0.74 12.3 10.06 2.79|10.9 6.52 1.36 17.0 3.92 0.82|12.8 8.56 1.56 4.3 3.95 0.72|3.4 0.03 0.02 13.3 0.04 0.03|44.8 19.08 4.54 55.2 18.80 4.91',
+    both: '100.0 37.88 9.45' },
+  es: { name: 'Spanish', corpus: 'spanish', flag: 'es',
+    bg:  '0.716 5.091|0.501 5.317|1.402 2.457|6.206 14.096',
+    tri: '48.271 29.164|8.035 7.115|6.911 1.543|2.321 0.402|0.370 0.370|0.090 0.090|42.114 20.064|24.427 11.407|15.382 8.450|0.512 0.019|1.793 0.188',
+    hd:  '7.5 0.90 0.60 9.9 0.47 0.31|10.4 3.36 0.93 9.1 3.42 0.95|10.4 6.41 1.34 19.6 18.05 3.76|12.6 9.47 1.72 4.1 2.30 0.42|0.8 0.00 0.00 15.7 0.07 0.05|41.6 20.14 4.59 58.4 24.31 5.48',
+    both: '100.0 44.45 10.07' }
+};
+const TRIGRAM_LABELS   = ['Alternation', 'Alt & SFS', 'Redirect Total', 'Red & SFS', 'Weak', 'Weak & SFS', 'Roll Total', 'Inroll2', 'Outroll2', 'Inroll3', 'Outroll3'];
+const TRIGRAM_IS_SUB   = [0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1];  // 1 = indented sub-row
+const TRIGRAM_CATEGORY = ['alt','alt','red','red','red','red','roll','roll','roll','roll','roll'];
+
+/* Tiny inline SVG flags (remote images are not allowed on published pages) */
+const FLAGS = {
+  fr: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2"><rect width="1" height="2" fill="#0055a4"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ef4135"/></svg>',
+  es: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2"><rect width="3" height="2" fill="#c60b1e"/><rect y=".5" width="3" height="1" fill="#ffc400"/></svg>',
+  gb: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0 0L60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0L60 30M60 0L0 30" stroke="#c8102e" stroke-width="3"/><path d="M30 0V30M0 15H60" stroke="#fff" stroke-width="10"/><path d="M30 0V30M0 15H60" stroke="#c8102e" stroke-width="6"/></svg>'
+};
+
+/* ==========================================================================
+   B. HELPERS & STATE
+   ========================================================================== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/* Switch buttons: visual state (+ check mark via CSS) and screen-reader state */
+function setActive(id, on) {
+  const btn = $(id);
+  btn.classList.toggle('active', on);
+  btn.setAttribute('aria-pressed', on);
+}
+const flagUrl = code => `url('data:image/svg+xml,${encodeURIComponent(FLAGS[code])}')`;
+
+const state = {
+  geometry: 'piantor',  // 'piantor' | 'rowstag'
+  view: 'sym',          // reference keyboard corner labels: 'sym' | 'nav'
+  openLang: -1          // index of the language whose details are open (-1 = none)
+};
+
+/* ==========================================================================
+   C. KEYBOARD SVG BUILDERS
+   "mode" selects what a key shows:
+     normal            -> base characters only (alpha layer)
+     acc | sym | nav   -> one layer, centred
+     allsym | allnav   -> reference view: base + accents + symbols (or nav) in the corners
+   ========================================================================== */
+
+/* One <text> element. Sizes are in SVG units, so they scale with the keyboard. */
+function svgText(x, y, cls, content, size) {
+  const fs = size ? ` style="font-size:${Math.round(size * 10) / 10}px"` : '';
+  return `<text x="${x}" y="${Math.round(y * 10) / 10}" class="${cls}"${fs}>${esc(content)}</text>`;
+}
+
+/* All labels of one key (w x h = key size) for the requested mode */
+function keyLabels(id, w, h, mode) {
+  const [base, shift, sym, acc, nav] = KEYS[id];
+  const cx = w / 2, cy = h / 2;
+
+  if (mode === 'normal') {
+    if (shift) return svgText(cx, h * .29, 'l2', shift, h * .34) + svgText(cx, h * .70, 'l1', base, h * .42);
+    return svgText(cx, cy, 'l1', base, base.length > 1 ? h * .38 : h * .55);
+  }
+
+  if (mode === 'acc' || mode === 'sym' || mode === 'nav') {
+    const value = { acc, sym, nav }[mode];
+    if (!value) return '';
+    const ratio = value.length > 2 ? .30 : value.length > 1 ? .38 : .48;  // longer text -> smaller font
+    return svgText(cx, cy, mode, value, h * ratio);
+  }
+
+  // Reference view: base top-left, accent top-right, symbol/nav bottom-right
+  const top = h * .31, bottom = h * .73, right = w - 14;
+  const [cornerClass, cornerText] = mode === 'allsym' ? ['sym', sym] : ['nav', nav];
+  const baseLabels = shift
+    ? svgText(14, top, 'l2', shift, h * .30) + svgText(14, bottom, 'l1', base, h * .34)
+    : svgText(14, top, 'l1', base, base.length > 1 ? h * .27 : h * .34);
+  return baseLabels + svgText(right, top, 'acc', acc, h * .29) + svgText(right, bottom, cornerClass, cornerText, h * .29);
+}
+
+/* ---- Piantor (split, column-staggered, thumb clusters) ---- */
+function piantorKey(id, row, mode) {
+  const transform = `translate(0 ${row * 58})`;
+  if (KEYS[id]) {
+    return `<g transform="${transform}"><rect width="52" height="52" rx="5"/>${keyLabels(id, 52, 52, mode)}</g>`;
+  }
+  return `<g class="specialKey" transform="${transform}"><rect width="52" height="52" rx="5"/><text x="26" y="26">${id}</text></g>`;
+}
+
+function piantorHand(hand, mode) {
+  const columns = hand.columns.map(([dx, dy], i) =>
+    `<g transform="translate(${dx} ${dy})">${hand.keys[i].map((id, row) => piantorKey(id, row, mode)).join('')}</g>`
+  ).join('');
+
+  const thumbs = hand.thumbs.map(([x, y, rotation, label, cls, fontSize]) =>
+    `<g class="${cls}" transform="translate(${x} ${y}) rotate(${rotation})">` +
+      `<g transform="translate(-26 -26)"><rect width="52" height="52" rx="5"/>` +
+      `<text x="26" y="26"${fontSize ? ` style="font-size:${fontSize}px"` : ''}>${label}</text></g></g>`
+  ).join('');
+
+  return `<g transform="translate(${hand.x} 7)">${columns}${thumbs}</g>`;
+}
+
+function buildPiantor(mode) {
+  // The viewBox is cropped tightly around the keys so they render as large as possible.
+  return `<svg viewBox="54 0 898 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Piantor keyboard, ${MODE_NAMES[mode]}">${piantorHand(PIANTOR.left, mode)}${piantorHand(PIANTOR.right, mode)}</svg>`;
+}
+
+/* ---- Classic ISO (row-staggered, 5 rows; unused keys are greyed out) ---- */
+function buildIso(mode) {
+  const KEY_W = 48, KEY_H = 46, PITCH = 53;
+
+  // Greyed-out key with a cross
+  const unused = (x, w, label = '×', h = KEY_H, y = 0) =>
+    `<g class="key-unused" transform="translate(${x} ${y})"><rect width="${w}" height="${h}" rx="4"/><text x="${w / 2}" y="${h / 2}">${label}</text></g>`;
+
+  // Fixed-function key (Esc, Tab, Shift...). "cls" can add accent colours (acc-key, sym-key).
+  const special = (x, w, label, fontSize, cls = '') =>
+    `<g class="specialKey ${cls}" transform="translate(${x})"><rect width="${w}" height="${KEY_H}" rx="4"/>` +
+    `<text x="${w / 2}" y="23"${fontSize ? ` style="font-size:${fontSize}px"` : ''}>${label}</text></g>`;
+
+  // Letter key, with the home-row-mod box on the alpha layer
+  const letter = (x, id) => {
+    const mod = (mode === 'normal' && HOLD_MODS[id])
+      ? `<g class="hold-box" transform="translate(5 27)"><rect width="16" height="15" rx="3"/>` +
+        `<text x="8" y="8"${id === 'T' || id === 'E' ? ' style="font-size:12px !important"' : ''}>${HOLD_MODS[id]}</text></g>`
+      : '';
+    return `<g transform="translate(${x})"><rect width="${KEY_W}" height="${KEY_H}" rx="4"/>${keyLabels(id, KEY_W, KEY_H, mode)}${mod}</g>`;
+  };
+
+  // A run of letter keys starting at x0
+  const run = (x0, ids) => ids.map((id, i) => letter(x0 + PITCH * i, id)).join('');
+
+  const rowAE =
+    `<g class="specialKey onoff-key"><rect width="48" height="46" rx="4"/><text x="24" y="23">On/Off</text></g>` +
+    Array.from({ length: 12 }, (_, i) => unused(PITCH + PITCH * i, KEY_W)).join('') + unused(689, 85);
+
+  const isoEnter =
+    `<g class="key-unused" transform="translate(713)"><path d="M0,0 h61 a4,4 0 0,1 4,4 v92 a4,4 0 0,1 -4,4 h-30 a4,4 0 0,1 -4,-4 v-44 a4,4 0 0,0 -4,-4 h-23 a4,4 0 0,1 -4,-4 v-44 a4,4 0 0,1 4,-4 z"/><text x="34" y="50">×</text></g>`;
+
+  const rowAD = special(0, 72, '⎋ Esc') + run(77, ['B','L','D','C','V','Z',"'",'O','U','X']) +
+                special(607, 48, '⌫', 16) + unused(660, KEY_W) + isoEnter;
+
+  const rowAC = special(0, 88, '↹ Tab') + run(93, ['N','R','T','S','F','Y','H','E','I','A']) +
+                special(623, 48, '⏎ Enter', 12) + unused(676, 46);
+
+  const rowAB = unused(0, 66) + run(71, ['QU','J','M','G','W']) + unused(336, KEY_W) +
+                run(389, ['K','P',',','.',':']) + unused(654, 120, '⇧');
+
+  const spaceBar =
+    `<g class="specialKey" transform="translate(214)"><rect width="297" height="46" rx="4"/>` +
+    `<text x="148" y="17" style="font-size:12px;font-weight:700">Space</text>` +
+    `<g class="nav-pill" transform="translate(113 26)"><rect width="70" height="16" rx="4"/><text x="35" y="8">NAV</text></g></g>`;
+
+  const rowAA = unused(0, 50) + unused(55, KEY_W) + special(108, KEY_W, '★', 0, 'acc-key') + special(161, KEY_W, '⇧ Shift') +
+                spaceBar + special(516, KEY_W, 'AltGr', 0, 'sym-key') + unused(569, KEY_W) + unused(622, 47) +
+                unused(674, KEY_W, '×', 21) + unused(674, KEY_W, '×', 21, 25) + unused(727, 47);
+
+  const rows = [rowAE, rowAD, rowAC, rowAB, rowAA]
+    .map((content, i) => `<g transform="translate(0 ${54 * i})">${content}</g>`).join('');
+
+  // Tight viewBox around the 5 rows (content spans x 153..927, y 27..289)
+  return `<svg viewBox="143 17 794 282" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Classic ISO keyboard, ${MODE_NAMES[mode]}"><g transform="translate(153 27)">${rows}</g></svg>`;
+}
+
+const buildKeyboard = mode => state.geometry === 'piantor' ? buildPiantor(mode) : buildIso(mode);
+
+/* ==========================================================================
+   D. MINI PREVIEWS (combos & tap dance)
+   ========================================================================== */
+function miniKeyboard(activeIds) {
+  const rect = (x, y, id) =>
+    `<rect class="m-key${activeIds.includes(id) ? ' m-on' : ''}" x="${x}" y="${y}" width="10" height="10" rx="2"/>`;
+
+  const hand = side => {
+    const { cols, thumbs, x } = MINI[side];
+    const keys = cols.map(([cx, cy], c) => [0, 1, 2].map(r => rect(cx, cy + 12 * r, `${side}${c}${r}`)).join('')).join('');
+    const thumbKeys = thumbs.map(([tx, ty], i) => rect(tx, ty, `${side}T${i}`)).join('');
+    return `<g transform="translate(${x} 4)">${keys}${thumbKeys}</g>`;
+  };
+  return `<svg viewBox="0 0 240 75" aria-hidden="true">${hand('L')}${hand('R')}</svg>`;
+}
+
+function renderCombos() {
+  const badges = list => list.map(k => `<span class="combo-key-badge">${esc(k)}</span>`).join('<span class="combo-plus">+</span>');
+
+  $('combos-grid').innerHTML = COMBOS.map(c => `
+    <div class="combo-card">
+      <div class="combo-top"><span class="combo-name">${c.name}</span><span class="combo-meta">${c.meta}</span></div>
+      <div class="mini-preview-wrap">${miniKeyboard(c.on)}</div>
+      <div class="combo-formula">${badges(c.keys)}<span class="combo-arrow">→</span><span class="combo-output">${c.out}</span></div>
+      <p class="combo-desc">${c.desc}</p>
+    </div>`).join('');
+
+  $('td-grid').innerHTML = TAP_DANCES.map(t => `
+    <div class="combo-card">
+      <div class="combo-top"><span class="combo-name">${t.key}</span><span class="combo-meta">Tap Dance</span></div>
+      <div class="mini-preview-wrap">${miniKeyboard(t.on)}</div>
+      <div class="combo-formula"><span class="td-n"><i>●</i>1 tap</span><span class="combo-arrow">→</span><span class="combo-output">${t.one}</span></div>
+      <div class="combo-formula"><span class="td-n"><i>●●</i>2 taps</span><span class="combo-arrow">→</span><span class="combo-output">${t.two}</span></div>
+      <p class="combo-desc">${t.desc}</p>
+    </div>`).join('');
+}
+
+/* ==========================================================================
+   E. STATISTICS UI
+   ========================================================================== */
+
+/* Turn the compact strings of STATS into arrays */
+const rows = str => str.split('|').map(r => r.split(' '));
+const LANGS = Object.values(STATS).map(s => ({ ...s, bg: rows(s.bg), tri: rows(s.tri), hd: rows(s.hd), both: s.both.split(' ') }));
+
+/* Four headline tiles: bigram value big, skipgram value underneath */
+function renderTiles(lang) {
+  const names = ['Same Finger', 'Same Key', 'Stretch', 'Scissor'];
+  return '<div class="tiles">' + names.map((name, i) => {
+    const unit = i < 2 ? '%' : '';  // Stretch and Scissor are not percentages on akl.gg
+    return `<div class="tile"><span class="tl">${name}</span>` +
+           `<span class="tv">${lang.bg[i][0]}${unit}<small>bigram</small></span>` +
+           `<span class="tv2">${lang.bg[i][1]}${unit}<small>skipgram</small></span></div>`;
+  }).join('') + '</div>';
+}
+
+/* Trigram category bar + detailed rows (each row has a background bar) */
+function renderTrigrams(lang) {
+  const summary = [[0, 'Alternation', 'alt'], [2, 'Redirect', 'red'], [6, 'Roll', 'roll']];
+  const bar = summary.map(([i, , cls]) => `<span class="${cls}" style="width:${lang.tri[i][0]}%"></span>`).join('');
+  const legend = summary.map(([i, name, cls]) => `<span class="lg ${cls}"><i></i>${name} <b>${lang.tri[i][0]}%</b></span>`).join('');
+  const detail = TRIGRAM_LABELS.map((label, i) =>
+    `<div class="tg ${TRIGRAM_CATEGORY[i]}${TRIGRAM_IS_SUB[i] ? ' sub' : ''}" style="--w:${Math.min(100, lang.tri[i][0] * 2)}%">` +
+    `<span>${label}</span><b>${lang.tri[i][0]}%</b><b class="nt">${lang.tri[i][1]}%</b></div>`).join('');
+
+  return `<div class="stack">${bar}</div><div class="legend">${legend}</div>` +
+         `<div class="tg hd"><span></span><b>All</b><b>No thumbs</b></div>${detail}`;
+}
+
+/* Mirrored finger bars + left/right balance + totals */
+function renderHands(lang) {
+  const fingers = ['pinky', 'ring', 'middle', 'index', 'thumb'];
+  const maxUsage = Math.max(...lang.hd.slice(0, 5).flatMap(h => [+h[0], +h[3]]));  // scale for the bars
+  const total = lang.hd[5];
+  // Two numbers side by side; data-l is the short label shown on narrow screens
+  const numbers = (a, labelA, b, labelB) => `<span class="nm"><b data-l="${labelA}">${a}</b><b data-l="${labelB}">${b}</b></span>`;
+
+  const fingerRows = fingers.map((finger, i) => {
+    const [lUsage, lSpeed, lWeighted, rUsage, rSpeed, rWeighted] = lang.hd[i];
+    return `<div class="bf" style="--lc:var(--fl-${finger});--rc:var(--fr-${finger})">` +
+      numbers(lWeighted, 'W', lSpeed, 'F') +
+      `<div class="bl"><span style="width:${lUsage / maxUsage * 100}%"></span><em>${lUsage}%</em></div>` +
+      `<div class="bn">${finger}</div>` +
+      `<div class="br"><span style="width:${rUsage / maxUsage * 100}%"></span><em>${rUsage}%</em></div>` +
+      numbers(rSpeed, 'F', rWeighted, 'W') + '</div>';
+  }).join('');
+
+  return `<p class="lgd">F = Fspeed · W = Weighted</p>` +
+    `<div class="bf hd"><span class="nm"><span>Weighted</span><span>Fspeed</span></span><span>← Left usage</span><span></span><span>Right usage →</span><span class="nm"><span>Fspeed</span><span>Weighted</span></span></div>` +
+    fingerRows +
+    `<div class="bal"><span class="lft" style="width:${total[0]}%">Left ${total[0]}%</span><span class="rgt" style="width:${total[3]}%">Right ${total[3]}%</span></div>` +
+    `<div class="sums">` +
+      `<div class="sum"><b>Left total</b><span>Fspeed ${total[1]}</span><br><span>Weighted ${total[2]}</span></div>` +
+      `<div class="sum"><b>Right total</b><span>Fspeed ${total[4]}</span><br><span>Weighted ${total[5]}</span></div>` +
+      `<div class="sum"><b>Both hands</b><span>Fspeed ${lang.both[1]}</span><br><span>Weighted ${lang.both[2]}</span></div>` +
+    `</div>`;
+}
+
+function renderDetails(lang) {
+  return `<div class="fs-head"><span class="flg" style="background-image:${flagUrl(lang.flag)}"></span>` +
+           `<div><b>${lang.name}</b><small>Corpora: ${lang.corpus}</small></div>` +
+           `<button type="button" class="x" data-close-details aria-label="Close details">✕</button></div>` +
+         renderTiles(lang) +
+         `<div class="fs-grid"><section class="fs-card"><h3>Trigrams</h3>${renderTrigrams(lang)}</section>` +
+         `<section class="fs-card"><h3>Hands &amp; fingers</h3>${renderHands(lang)}</section></div>`;
+}
+
+/* Open the details of language i, or close them when it is already open */
+function toggleLanguage(i) {
+  state.openLang = state.openLang === i ? -1 : i;
+  $('stats-row').classList.remove('hint');  // stop the arrow animation after the first tap
+  document.querySelectorAll('.stat-item').forEach((btn, j) => {
+    btn.classList.toggle('on', j === state.openLang);
+    btn.setAttribute('aria-expanded', j === state.openLang);
+  });
+  const panel = $('full-stats');
+  panel.hidden = state.openLang < 0;
+  if (state.openLang >= 0) {
+    panel.innerHTML = renderDetails(LANGS[state.openLang]);
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function renderStats() {
+  $('params').innerHTML = PARAMS.map(([label, value]) => `<div class="chip"><b>${label}</b><span>${value}</span></div>`).join('');
+  $('stats-row').innerHTML = LANGS.map((lang, i) => `
+    <button type="button" class="stat-item" data-lang="${i}" aria-expanded="false">
+      <div class="stat-flag" style="background-image:${flagUrl(lang.flag)}"></div>
+      <div class="stat-content">
+        <div class="stat-top"><span class="stat-lang">${lang.name}</span><span class="stat-meta">Corpora: ${lang.corpus}</span></div>
+        <div class="stat-values">
+          <span><span class="stat-label">SFB</span><span class="stat-numb">${lang.bg[0][0]}%</span></span>
+          <span><span class="stat-label">SFS</span><span class="stat-numb">${lang.bg[0][1]}%</span></span>
+        </div>
+        <div class="stat-cta"><span><span class="o">View full stats</span><span class="c">Hide full stats</span></span><i>▾</i></div>
+      </div>
+    </button>`).join('');
+}
+
+/* ==========================================================================
+   F. PAGE RENDERING
+   ========================================================================== */
+function renderOrtho() {
+  $('ortho-grid').innerHTML = ORTHO.map((key, i) =>
+    key === 'gap' ? '<div class="ortho-gap"></div>'
+                  : `<div class="ortho-key ${FINGER_CLASS[i % 11]}">${key}</div>`).join('');
+}
+
+function renderKeyboards() {
+  $('master').innerHTML = buildKeyboard(state.view === 'sym' ? 'allsym' : 'allnav');
+  $('layers-grid').innerHTML = LAYERS.map(layer => `
+    <div class="kb-section">
+      <div class="layer-header"><div class="layer-title">${layer.title}${layer.sub ? `<span class="layer-subtitle">${layer.sub}</span>` : ''}</div></div>
+      <div class="kb">${buildKeyboard(layer.mode)}</div>
+    </div>`).join('');
+}
+
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  setActive('btn-dark', theme !== 'light');
+  setActive('btn-light', theme === 'light');
+  try { localStorage.setItem('theme', theme); } catch (e) { /* storage may be unavailable */ }
+}
+
+function setGeometry(geometry) {
+  state.geometry = geometry;
+  const isPiantor = geometry === 'piantor';
+  setActive('btn-piantor', isPiantor);
+  setActive('btn-rowstag', !isPiantor);
+  $('layout-badge').textContent = isPiantor ? 'Piantor | 42-keys' : 'Classic ISO | Min. 39-keys';
+  document.querySelectorAll('[data-piantor-only]').forEach(el => { el.hidden = !isPiantor; });  // combos only make sense on Piantor
+  renderKeyboards();
+}
+
+function setView(view) {
+  state.view = view;
+  setActive('view-sym', view === 'sym');
+  setActive('view-nav', view === 'nav');
+  renderKeyboards();
+}
+
+/* ==========================================================================
+   G. FULLSCREEN VIEWER (small screens)
+   ========================================================================== */
+const isSmallScreen = window.matchMedia('(max-width: 760px)');
+
+function openViewer(svgMarkup) {
+  $('v-stage').innerHTML = svgMarkup;
+  $('viewer').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+function closeViewer() {
+  $('viewer').hidden = true;
+  document.body.style.overflow = '';
+}
+
+/* ==========================================================================
+   H. EVENTS & INIT
+   ========================================================================== */
+$('btn-dark').addEventListener('click', () => setTheme('dark'));
+$('btn-light').addEventListener('click', () => setTheme('light'));
+$('btn-piantor').addEventListener('click', () => setGeometry('piantor'));
+$('btn-rowstag').addEventListener('click', () => setGeometry('rowstag'));
+$('view-sym').addEventListener('click', () => setView('sym'));
+$('view-nav').addEventListener('click', () => setView('nav'));
+
+/* One delegated listener for everything created dynamically */
+document.addEventListener('click', e => {
+  const pill = e.target.closest('[data-lang]');
+  if (pill) return toggleLanguage(+pill.dataset.lang);
+  if (e.target.closest('[data-close-details]')) return toggleLanguage(state.openLang);
+
+  const kb = e.target.closest('#master, .kb');
+  if (kb && isSmallScreen.matches) return openViewer(kb.innerHTML);
+
+  if (e.target.closest('#viewer')) closeViewer();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeViewer(); });
+
+/* Initial theme: saved choice, otherwise the system preference */
+let savedTheme = null;
+try { savedTheme = localStorage.getItem('theme'); } catch (e) { /* ignore */ }
+setTheme(savedTheme || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+
+renderStats();
+renderOrtho();
+renderCombos();
+renderKeyboards();
+</script>
+</body>
+</html>
